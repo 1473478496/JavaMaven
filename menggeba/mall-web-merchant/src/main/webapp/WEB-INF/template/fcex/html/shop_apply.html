@@ -1,0 +1,396 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家入驻申请</title>
+<link rel="stylesheet" type="text/css" href="css/webuploader.css" />
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/Validform.js"></script>
+</head>
+
+<body>
+  <!-- 引入头部文件 -->
+  <!--  [#include "/common/header.ftl"/] -->
+  
+  <!-- 流程广告图 -->
+  <div class="bander-pic">
+  	<!-- 后台可以传图片 -->
+    <img src="images/shop_apply_banner01.jpg" alt="">
+  </div>
+  <div class="wrap">
+    <div class="cooperation-pro">
+      <div class="info-sub">
+         <h3>商家合作信息</h3>
+         <span>|</span>
+         <em>联系电话 0755-25884663</em>
+       </div>
+      <div class="cop-info">
+   		<div class="order-control">
+           <h3 class="proimgtit">基本信息</h3>
+           <div class="proinfo">
+           	<form id="reviewForm" name="reviewForm" method="post">
+           		<!--商家基本信息-->
+           		<ul class="proinfolist">
+           			<li>
+           				<div class="settfrom">
+           					<label for="name"><i>*</i>中文名</label>
+           					<input type="text" name="trade" class="inputxt" class="inputxt" datatype="s6-18" nullmsg="请输入您的昵称！" errormsg="昵称至少6个字符,最多18个字符！" />
+           					<div class="info"><span class="Validform_checktip">昵称至少6个字符,最多18个字符</span><span class="dec"><s class="dec1">&#9670;</s><s class="dec2">&#9670;</s></span></div>
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>越南名</label>
+           					<input type="text" />
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>证件类型</label>
+           					<select datatype="*" nullmsg="请选择所在城市！" errormsg="请选择所在城市！">
+           					   <option value="">请选择</option>
+			                   <option value="1">身份证</option>
+			                   <option value="2">越南边民证</option>
+			                   <option value="3">护照</option>
+			                 </select>
+			                 <div class="info"><span class="Validform_checktip">昵称至少6个字符,最多18个字符</span><span class="dec"><s class="dec1">&#9670;</s><s class="dec2">&#9670;</s></span></div>
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>证件号码</label>
+           					<input type="text" />
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>性别</label>
+           					<select>
+			                   <option>男</option>
+			                   <option>女</option>
+			                 </select>
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>手机号码</label>
+           					<input type="text" />
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label>生日</label>
+           					<input type="text" id="birthDay" class="Wdate" name="birthDay"/>
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label>住址</label>
+           					<input type="text" />
+           				</div>
+           			</li>
+           		</ul>
+           		
+           		<!-- 签约信息 -->
+           		<h3 class="proimgtit">签约信息</h3>
+           		<ul class="proinfolist contract_list">
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>商铺号</label>
+           					<input type="text" />
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>协议起止时间</label>
+           					<input type="text" id="beginDay" class="Wdate" name="beginDay"/> — <input type="text" id="endDay" class="Wdate" name="endDay"/>
+           				</div>
+           			</li>
+           			<li>
+           				<div class="settfrom">
+           					<label><i>*</i>商户类型</label>
+           					<div class="busnistyle">
+           						<!-- 可多选 -->
+	           					<label><input type="checkbox" name="" value="1" checked="">农产品</label>
+	           					<label><input type="checkbox" name="" value="2" checked="">海鲜产品</label>
+	           					<label><input type="checkbox" name="" value="3" checked="">农产品产品产品</label>
+	           					<label><input type="checkbox" name="" value="4" checked="">海鲜产品产品产品</label>
+							</div>
+           				</div>
+           			</li>
+           		</ul>
+           		
+           		<!-- 商家资质 必须上传营业执照和法人身份证照片 至少2张图片  可以在本页面实例化 -->
+           		<h3 class="proimgtit">商家资质</h3>
+           		<div class="business_img">
+           			<div class="settfrom">
+      					<label><i>*</i>请上传营业执行</label>
+	               		<div class="wbupbox">
+	               			<!-- 图片上传使用的是webuploader 插件 可参考萌哥吧评价晒单	 -->
+							<div id="uploader" class="wuploader">
+				                <div class="queueList">
+				                    <div id="dndArea" class="placeholder">
+				                        <div id="filePicker"></div>
+				                        <div id="btnContainer"></div>
+				                        <p>或将照片拖到这里</p>
+				                    </div>
+				                </div>
+				                <div class="statusBar" style="display:none;">
+				                    <div class="progress">
+				                        <span class="text">0%</span>
+				                        <span class="percentage"></span>
+				                    </div><div class="info"></div>
+				                    <div class="btns">
+				                        <div id="filePicker2"></div><div class="uploadBtn">开始上传</div>
+				                    </div>
+				                </div>
+				            </div>
+						</div>
+      				</div>
+      				
+      				<div class="settfrom">
+      					<label><i>*</i>请上传法人身份证</label>
+	               		<div class="wbupbox">
+	               			<!-- 图片上传使用的是webuploader 插件 可参考萌哥吧评价晒单	 -->
+							<div id="wuploader" class="wuploader">
+				                <div class="queueList">
+				                    <div id="wdndArea" class="placeholder">
+				                        <div id="wfilePicker"></div>
+				                        <div id="btnContainer"></div>
+				                        <p>或将照片拖到这里</p>
+				                    </div>
+				                </div>
+				                <div class="statusBar" style="display:none;">
+				                    <div class="progress">
+				                        <span class="text">0%</span>
+				                        <span class="percentage"></span>
+				                    </div><div class="info"></div>
+				                    <div class="btns">
+				                        <div id="wfilePicker2"></div><div class="uploadBtn">开始上传</div>
+				                    </div>
+				                </div>
+				            </div>
+						</div>
+      				</div>
+      				
+           		</div>
+           		
+           		<!-- 代理人可以不填 不必须 -->
+           		<h3 class="proimgtit">代理人信息</h3>
+           		<div class="agentbox">
+           			<!-- 添加代理人模块 -->
+           			<div class="orderbtnbox">
+           				<input type="button" class=" order_btnj agentbtn" value="添加代理人"/>
+           			</div>
+           		</div>
+           		
+           		<!-- 银行信息至少填一个 -->
+       			<h3 class="proimgtit">银行信息</h3>
+       			<div class="agentbox">
+       				<div class="orderbtnbox">
+           				<input type="button" class="order_btnj bankbtn" value="添加银行卡"/>
+           			</div>
+       				<!-- 添加银行卡模块 -->
+	       			<div class="agentinfobox bankinfobox">
+	       				<p>银行卡1</p>
+	       				<ul class="proinfolist agent_list">
+	       					<li>
+	       						<div class="settfrom">
+	         					<label><i>*</i>账户名称</label>
+	         					<input type="text" />
+	         				</div>
+	       					</li>
+	       					<li>
+		         				<div class="settfrom">
+		         					<label><i>*</i>银行卡卡号</label>
+		         					<input type="text" />
+		         				</div>
+		         			</li>
+		         			<li>
+		         				<div class="settfrom">
+		         					<label><i>*</i>开户银行</label>
+		         					<select>
+					                   <option>中国银行</option>
+					                 </select>
+		         				</div>
+		         			</li>
+	       				</ul>
+	       				<a class="bankdelbtn" onclick="bankDel(this);" href="javascript:;">删除银行卡</a>
+	       			</div>
+	       			
+           		</div>
+           		
+           		<!-- 备注 -->
+           		<ul class="proinfolist ">
+           			<li>
+           				<div class="settfrom">
+           					<label>备注</label>
+           					<input type="text" />
+           				</div>
+           			</li>
+           		</ul>
+           		
+           		<div class="agreebox">
+   					<label><input type="checkbox" name="" value="1" checked=""><a href="#">同意商家合作协议</a></label>
+   				</div>
+           		
+           		<!-- 按钮 -->
+           		<div class="orderbtnbox probtnbox">
+	                <input type="button" value="提交" id="btnbox"/>
+	                <input type="reset" class="order_btnj"  value="取消"/>
+	            </div> 
+	            
+           	</form>
+           </div>
+         </div>
+            	
+      
+      </div>
+    </div>
+  </div>
+  
+  <script src="datepicker/WdatePicker.js"></script>
+  <script src="js/webuploader.js"></script>
+  <script src="js/upload.js"></script>
+  <script src="js/upload_apply.js"></script>
+  
+  <script>
+    $("#birthDay,#beginDay,#endDay").click(function(){
+		WdatePicker();
+	});
+	
+    var agentIndex=1;
+    $(".agentbtn").on('click',function(){
+    	var html='';
+    		html+='<div class="agentinfobox">'
+           				+'<p>代理人'+(agentIndex++)+'</p>'
+           				+'<ul class="proinfolist agent_list">'
+           					+'<li>'
+           						+'<div class="settfrom">'
+		           					+'<label><i>*</i>代理人姓名</label>'
+		           					+'<input type="text" />'
+		           				+'</div>'
+           					+'</li>'
+           					+'<li>'
+		           				+'<div class="settfrom">'
+		           					+'<label><i>*</i>手机号码</label>'
+		           					+'<input type="text" />'
+		           				+'</div>'
+		           			+'</li>'
+		           			+'<li>'
+		           				+'<div class="settfrom">'
+		           					+'<label><i>*</i>证件类型</label>'
+		           					+'<select>'
+					                   +'<option>身份证</option>'
+					                   +'<option>越南边民证</option>'
+					                   +'<option>护照</option>'
+					                 +'</select>'
+		           				+'</div>'
+		           			+'</li>'
+		           			+'<li>'
+		           				+'<div class="settfrom">'
+		           					+'<label><i>*</i>证件号码</label>'
+		           					+'<input type="text" />'
+		           				+'</div>'
+		           			+'</li>'
+           				+'</ul>'
+           				+'<a class="agentdel" onclick="agentInfoDel(this)" href="javascript:;">删除代理人</a>'
+           			+'</div>';
+           	$(this).parents('.agentbox').append(html);
+    })
+    
+    
+    var bankIndex=2;
+    $(".bankbtn").on('click',function(){
+    	var html='';
+    	html+='<div class="agentinfobox bankinfobox">'
+				+'<p>银行卡'+(bankIndex++)+'</p>'
+				+'<ul class="proinfolist agent_list">'
+					+'<li>'
+						+'<div class="settfrom">'
+       					+'<label><i>*</i>账户名称</label>'
+       					+'<input type="text" />'
+       				+'</div>'
+					+'</li>'
+					+'<li>'
+       				+'<div class="settfrom">'
+       					+'<label><i>*</i>银行卡卡号</label>'
+       					+'<input type="text" />'
+       				+'</div>'
+       			+'</li>'
+       			+'<li>'
+       				+'<div class="settfrom">'
+       					+'<label><i>*</i>开户银行</label>'
+       					+'<select>'
+		                   +'<option>中国银行</option>'
+		                 +'</select>'
+       				+'</div>'
+       			+'</li>'
+				+'</ul>'
+				+'<a class="bankdelbtn" onclick="bankDel(this);" href="javascript:;">删除银行卡</a>'
+			+'</div>';
+    	$(this).parents('.agentbox').append(html);
+    	if($('.bankinfobox').length>1){
+    		$('.bankdelbtn').show();
+    	}
+    });
+    
+    function agentInfoDel(obj){
+    	$(obj).parents('.agentinfobox').remove();
+    }
+    
+    function bankDel(obj){
+    	if($('.bankinfobox').length==2){
+    		$(obj).parents('.agentinfobox').siblings('.agentinfobox').find('a').hide();
+    		$(obj).parents('.agentinfobox').remove();
+    	}else if($('.bankinfobox').length==1){
+    		$(obj).hide();
+    	}else{
+    		$(obj).parents('.agentinfobox').remove();
+    	}
+    }
+    
+    $(function(){
+    	if($('.bankinfobox').length==1){
+    		$('.bankdelbtn').hide();
+    	}
+    });
+    
+    $(function(){
+		$("#reviewForm").Validform({
+			tiptype:function(msg,o,cssctl){
+				if(!o.obj.is("form")){
+					var objtip=o.obj.siblings().find(".Validform_checktip");
+					cssctl(objtip,o.type);
+					objtip.text(msg);
+					
+					var infoObj=o.obj.siblings(".info");
+					if(o.type==2){
+						infoObj.fadeOut(200);
+					}else{
+						if(infoObj.is(":visible")){return;}
+						var left=o.obj.offset().left,
+							top=o.obj.offset().top;
+		
+						infoObj.css({
+							left:left+o.obj.width()-50,
+							top:top-45
+						}).show().animate({
+							top:top-35	
+						},200);
+					}
+				}
+			}
+		});
+		
+		$('#btnbox').click(function(){
+			console.info($("#reviewForm").Validform().check())
+		})
+		
+	})
+  </script>
+
+  
+</body>
+</html>

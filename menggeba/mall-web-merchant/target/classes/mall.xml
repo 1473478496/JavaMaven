@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gbmshop>
+	<setting name="siteName" value="众慧商城" />
+	<setting name="siteUrl" value="http://61.142.65.88:8090/mall-web-view" />
+	<setting name="logo" value="/upload/image/logo.gif" />
+	<setting name="hotSearch" value="拉杆箱,妈咪包,煲,锅,背包 " />
+	<setting name="address" value="" />
+	<setting name="phone" value="xxxx" />
+	<setting name="zipCode" value="xxxx" />
+	<setting name="email" value="xxxx" />
+	<setting name="certtext" value="xxxx" />
+	<setting name="isSiteEnabled" value="true" />
+	<setting name="largeProductImageWidth" value="800" />
+	<setting name="largeProductImageHeight" value="800" />
+	<setting name="mediumProductImageWidth" value="300" />
+	<setting name="mediumProductImageHeight" value="300" />
+	<setting name="thumbnailProductImageWidth" value="170" />
+	<setting name="thumbnailProductImageHeight" value="170" />
+	<setting name="defaultLargeProductImage" value="d:\\upload\\image\\default_large.jpg" />
+	<setting name="defaultMediumProductImage" value="d:\\upload\\image\\default_medium.jpg" />
+	<setting name="defaultThumbnailProductImage" value="d:\\upload\\image\\default_thumbnail.jpg" />
+	<setting name="watermarkAlpha" value="50" />
+	<setting name="watermarkImage" value="d:\\upload\\image\\watermark.png" />
+	<setting name="watermarkPosition" value="bottomRight" />
+	<setting name="priceScale" value="2" />
+	<setting name="priceRoundType" value="roundHalfUp" />
+	<setting name="isShowMarketPrice" value="true" />
+	<setting name="defaultMarketPriceScale" value="1.2" />
+	<setting name="isRegisterEnabled" value="true" />
+	<setting name="isDuplicateEmail" value="false" />
+	<setting name="isDuplicateMobile" value="false" />
+	<setting name="disabledUsername" value="admin,管理员" />
+	<setting name="usernameMinLength" value="4" />
+	<setting name="usernameMaxLength" value="20" />
+	<setting name="passwordMinLength" value="4" />
+	<setting name="passwordMaxLength" value="20" />
+	<setting name="registerPoint" value="0" />
+		<setting name="isEmailLogin" value="true" />
+	<setting name="isMobileLogin" value="true" />
+	<setting name="captchaTypes" value="memberLogin,memberRegister,adminLogin,review,consultation,findPassword,resetPassword,other,wapFindPassword" />
+	<setting name="accountLockTypes" value="member,admin" />
+	<setting name="accountLockCount" value="5" />
+	<setting name="accountLockTime" value="10" />
+	<setting name="safeKeyExpiryTime" value="1440" />
+	<setting name="uploadMaxSize" value="10" />
+	<setting name="uploadImageExtension" value="jpg,jpeg,bmp,gif,png" />
+	<setting name="uploadFlashExtension" value="swf,flv" />
+	<setting name="uploadMediaExtension" value="swf,flv,mp3,wav,avi,rm,rmvb" />
+	<setting name="uploadFileExtension" value="zip,rar,7z,doc,docx,xls,xlsx,ppt,pptx" />
+	<setting name="imageUploadPath" value="/view/image/${.now?string('yyyyMM')}/" />
+	<setting name="flashUploadPath" value="d:\\upload\\flash\\${.now?string('yyyyMM')}/" />
+	<setting name="mediaUploadPath" value="d:\\upload\\media\\${.now?string('yyyyMM')}/" />
+	<setting name="fileUploadPath" value="d:\\upload\\file\\${.now?string('yyyyMM')}/" />
+	<setting name="smtpFromMail" value="chen.xj@vivebest.com" />
+	<setting name="smtpHost" value="smtp.vivebest.com" />
+	<setting name="smtpPort" value="25" />
+	<setting name="smtpUsername" value="chen.xj@vivebest.com" />
+	<setting name="smtpPassword" value="hai123" />
+	<setting name="currencySign" value="￥" />
+	<setting name="currencyUnit" value="元" />
+	<setting name="stockAlertCount" value="5" />
+	<setting name="stockAllocationTime" value="order" />
+	<setting name="defaultPointScale" value="1" />
+	<setting name="isDevelopmentEnabled" value="false" />
+	<setting name="isReviewEnabled" value="true" />
+	<setting name="isReviewCheck" value="true" />
+	<setting name="reviewAuthority" value="purchased" />
+	<setting name="isConsultationEnabled" value="true" />
+	<setting name="isConsultationCheck" value="true" />
+	<setting name="consultationAuthority" value="member" />
+	<setting name="isInvoiceEnabled" value="true" />
+	<setting name="isTaxPriceEnabled" value="true" />
+	<setting name="taxRate" value="0.06" />
+	<setting name="cookiePath" value="/" />
+	<setting name="cookieDomain" value="" />
+	<setting name="kuaidi100Key" value="" />
+	<setting name="isCnzzEnabled" value="false" />
+	<setting name="cnzzSiteId" value="" />
+	<setting name="cnzzPassword" value="" />
+	<setting name="isNeedPhoneRegister" value="true"/>
+	<setting name="isNeedPictureRegister" value="false"/>
+	
+	<template id="shopCommonJs" type="page" name="shop_common_js" templatePath="/shop/js/common.ftl" staticPath="/resources/shop/js/common.js" />
+	<template id="adminCommonJs" type="page" name="admin_common_js" templatePath="/admin/js/common.ftl" staticPath="/resources/admin/js/common.js" />
+	<template id="sitemapIndex" type="page" name="sitemap索引" templatePath="/shop/xml/sitemap_index.ftl" staticPath="/sitemap/index.xml" />
+	<template id="sitemap" type="page" name="sitemap" templatePath="/shop/xml/sitemap.ftl" staticPath="/sitemap/${index}.xml" />
+	<template id="index" type="page" name="首页" templatePath="/shop/index.ftl" staticPath="/index.html" />
+	<template id="articleContent" type="page" name="文章内容" templatePath="/shop/article/content.ftl" staticPath="/article/content/${id}.do" />
+	<template id="productContent" type="page" name="商品内容" templatePath="/shop/product/content.ftl" staticPath="/product/content/${id}.do" />
+	<template id="articleList" type="page" name="文章列表" templatePath="/shop/article/list.ftl" />
+	<template id="productList" type="page" name="商品列表" templatePath="/shop/product/list.ftl" />
+	<template id="brandList" type="page" name="品牌列表" templatePath="/shop/brand/list.ftl" />
+	<template id="brandContent" type="page" name="品牌内容" templatePath="/shop/brand/content.ftl" />
+	<template id="promotionContent" type="page" name="促销内容" templatePath="/shop/promotion/content.ftl" />
+	<template id="productCategory" type="page" name="商品分类" templatePath="/shop/product_category/index.ftl" />
+	<template id="friendLink" type="page" name="友情链接" templatePath="/shop/friend_link/index.ftl" />
+	<template id="testMail" type="mail" name="邮件测试" templatePath="/admin/setting/mail.ftl" />
+	<template id="productNotifyMail" type="mail" name="到货通知" templatePath="/shop/product_notify/mail.ftl" />
+	<template id="findPasswordMail" type="mail" name="找回密码" templatePath="/shop/password/mail.ftl"/>
+	<template id="wapFindPasswordMail" type="mail" name="wap端找回密码" templatePath="/wap/password/mail.ftl"/>
+	<template id="emainBinding" type="mail" name="email绑定" templatePath="/shop/member/binding/mail.ftl"/>
+	<template id="orderPrint" type="print" name="订单打印" templatePath="/admin/print/order.ftl"/>
+	<template id="productPrint" type="print" name="购物单打印" templatePath="/admin/print/product.ftl"/>
+	<template id="shippingPrint" type="print" name="配送单打印" templatePath="/admin/print/shipping.ftl"/>
+</gbmshop>

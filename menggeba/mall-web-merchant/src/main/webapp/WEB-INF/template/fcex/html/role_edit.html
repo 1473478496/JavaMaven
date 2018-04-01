@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商户管理-角色管理</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+
+<body>
+  
+<!-- 需要引入头部公共文件 -->
+ <!--[#include "/common/header.ftl"/] -->
+  <div class="wrap">
+    <div class="container-setting fix">
+      <!-- 需要引入导航公共文件 -->
+       <!--[#include "/common/menu.ftl"/] -->
+       
+      <div class="container-middle">
+	          <ul class="b-nav">
+	            <li><a href="#">角色管理</a><span>></span></li>
+	            <li><a href="#">编辑</a></li>
+	          </ul>
+	          
+             <div class="order-control">
+	              <h4>角色编辑</h4>
+	              <form action="#" method="" class="shopset-form categyform">
+		                <div class="settfrom">
+	                		<label><i>*</i>角色名 : </label><input type="text">
+		                </div>
+		                <div class="settfrom">
+	                		<label>描述 : </label><textarea class="sp_textarea"></textarea>
+		                </div>
+		                <div class="settfrom">
+	                		<label>快捷选择: </label>
+							<div class="brandcagy">
+								<label>
+									<input type="checkbox" >全选
+								</label>
+							</div>
+		                </div>
+		                <div class="settfrom">
+		                	<!-- 模块数据从平台导出 -->
+	                		<label>商品管理 : </label>
+	                		<div class="brandcagy">
+		                		<label>
+									<input type="checkbox" name="authorities" checked="checked">商品管理
+								</label>
+								<label>
+									<input type="checkbox" name="authorities" checked="checked">商品分类管理
+								</label>
+								<label>
+									<input type="checkbox" name="authorities" checked="checked">规格管理
+								</label>
+							</div>
+		                </div>
+		                <div class="settfrom">
+	                		<label>模块名: </label>
+	                		<div class="brandcagy">
+		                		<label>
+									<input type="checkbox" name="authorities" checked="checked">模块名
+								</label>
+								<label>
+									<input type="checkbox" name="authorities">模块名
+								</label>
+								<label>
+									<input type="checkbox" name="authorities">模块名
+								</label>
+							</div>
+		                </div>
+		                <div class="settfrom">
+	                		<label>模块名 : </label>
+	                		<div class="brandcagy">
+		                		<label title="全名">
+									<input type="checkbox" name="authorities" checked="checked">商品管理
+								</label>
+								<label title="富安娜">
+									<input type="checkbox" name="authorities">商品分类管理
+								</label>
+								<label title="富安娜">
+									<input type="checkbox" name="authorities">规格管理
+								</label>
+							</div>
+		                </div>
+		                <div class="orderbtnbox probtnbox">
+		                  <input type="submit" value="保存">
+		                  <input type="button" class="order_btnj" value="返回">
+		                </div>
+		            </form>
+            </div>
+      </div>
+      
+    </div>
+  </div>
+
+	  <!-- 底部 -->
+	  <!-- [#include "/common/footer.ftl"/] -->
+
+</body>
+<html>
+
+
+
+

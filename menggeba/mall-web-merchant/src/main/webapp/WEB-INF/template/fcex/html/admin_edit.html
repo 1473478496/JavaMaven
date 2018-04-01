@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商户管理-账户管理</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+
+<body>
+  
+<!-- 需要引入头部公共文件 -->
+ <!--[#include "/common/header.ftl"/] -->
+  <div class="wrap">
+    <div class="container-setting fix">
+      <!-- 需要引入导航公共文件 -->
+       <!--[#include "/common/menu.ftl"/] -->
+       
+      <div class="container-middle">
+	          <ul class="b-nav">
+	            <li><a href="#">账户管理</a><span>></span></li>
+	            <li><a href="#">编辑</a></li>
+	          </ul>
+	          
+	        	  <!--商品分类管理-->
+            <div class="order-control">
+	              <h4>账户编辑</h4>
+	              <form action="#" method="" class="shopset-form categyform">
+		                <div class="settfrom">
+	                		<label><i>*</i>用户名 : </label><input type="text">
+		                </div>
+		                 <div class="settfrom">
+	                		<label><i>*</i>密码 : </label><input type="password">
+		                </div>
+		                 <div class="settfrom">
+	                		<label><i>*</i>确认密码: </label><input type="password">
+		                </div>
+		                 <div class="settfrom">
+	                		<label>E-mail: </label><input type="text">
+		                </div>
+		                <div class="settfrom">
+	                		<label><i>*</i>角色 : </label>
+	                		<div class="brandcagy">
+		                		<label title="全名">
+									<input type="checkbox" name="roleIds" value="10" checked="checked">电销客服
+								</label>
+								<label title="富安娜">
+									<input type="checkbox" name="roleIds" value="7">管理层
+								</label>
+								<label title="富安娜">
+									<input type="checkbox" name="brandIds" value="77">富安娜阿斯蒂芬富安娜阿斯蒂芬富安
+								</label>
+								<label title="富安娜">
+									<input type="checkbox" name="brandIds" value="77">富安娜
+								</label>
+								<label title="富安娜">
+									<input type="checkbox" name="brandIds" value="77">富安娜ad阿拉斯加
+								</label>
+							</div>
+		                </div>
+		                <div class="settfrom">
+	                		<label><i>*</i>设置 : </label>
+	                		<label>
+								<input type="checkbox" name="isEnabled" value="true" checked="checked">是否启用
+							</label>
+		                </div>
+		                <div class="orderbtnbox probtnbox">
+		                  <input type="submit" value="保存">
+		                  <input type="button" class="order_btnj" value="返回">
+		                </div>
+		            </form>
+            </div>
+      </div>
+      
+    </div>
+  </div>
+
+	  <!-- 底部 -->
+	  <!-- [#include "/common/footer.ftl"/] -->
+
+</body>
+<html>
+
+
+
+

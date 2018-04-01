@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>结算列表</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="datepicker/WdatePicker.js"></script>
+</head>
+
+<body>
+    <!-- 引入头部文件 -->
+  <!--  [#include "/common/header.ftl"/] -->
+  <div class="wrap">
+    <div class="container-setting fix">
+    
+     <!-- 菜单 -->
+      <!-- [#include "/common/menu.ftl"/] -->
+      
+      <div class="container-middle">
+          <ul class="b-nav">
+            <li><a href="#">结算管理</a><span>></span></li>
+            <li><a href="#">结算列表</a></li>
+          </ul>
+          <!--结算申请-->
+          <div>
+            <div class="order-control">
+              <h4>结算查询</h4>
+              <div class="form-container">
+              <form action="#" class="order-control-form">
+              	<div class="oh order_selbox">
+	                <p>
+	                  <label for="order-num">结算编号</label><input type="text" id="order-num" name="order-num" value=""/>
+	                </p>
+	                <p>
+	                  <label for="applyNum">结算人</label>
+					   <select>
+	                 	 <option value="">全部</option>
+		                  <option value="">结算人</option>
+		                  <option value="">结算人</option>
+		               </select>
+	                </p>
+	                <p>
+	                  <label for="buyer-acc">银行账户名</label>
+	                  <select>
+	                 	 <option value="">全部</option>
+		                  <option value="">银行账户名</option>
+		                  <option value="">银行账户名</option>
+		               </select>
+	                </p>
+	                <p>
+	                  <label for="tracking-name">银行卡号</label>
+	                  <select>
+	                 	 <option value="">全部</option>
+		                  <option value="">银行卡号</option>
+		                  <option value="">银行卡号银行卡号银行卡号银行卡号</option>
+		               </select>
+	                </p>
+	                <p>
+	                  <label for="tracking-name">结算状态</label>
+	                  <select>
+	                 	 <option value="">全部</option>
+		                  <option value="">待审核</option>
+		                  <option value="">结算成功</option>
+		                  <option value="">结算失败</option>
+		                  <option value="">审核通过</option>
+		                  <option value="">审核拒绝</option>
+		               </select>
+	                </p>
+	                <p>
+	                  <label for="ordered-time-star">结算时间</label><input type="text" id="ordered-time-star" class="Wdate" name="ordered-time-star" value=""/>—<input type="text" id="ordered-time-end" class="Wdate" name="ordered-time-end" value=""/>
+	                </p>
+	                <div class="orderbtnbox">
+	                  <input type="submit" value="查询"/>
+	                  <input type="reset" class="order_btnj"  value="重置"/>
+	                </div> 
+                </div>
+              </form>
+              </div>
+            </div>
+            <div class="order-l-content">
+              <div class="ordstu-nav settlenav">
+                <a href="#" class="o-active">待审核</a>
+                <a href="#">审核通过</a>
+                <a href="#">审核拒绝</a>
+                <a href="#">结算成功</a>
+                <a href="#">结算失败</a>
+                <p class="pg-limit">
+                  <span>每页显示</span> 
+                  <select name="limit-cot" id="limit-cot">
+                    <option value="">20条</option>
+                    <option value="">50条</option>
+                    <option value="">100条</option>
+                  </select>
+                </p>
+              </div>
+              <div class="order-list">
+                <table class="order-list-tb"> 
+                   <col width="13%" />
+  				   <col width="15%" />
+  				   <col width="12%" />
+  				   <col width="20%" />
+  				   <col width="13%" />
+  				   <col width="13%" />
+                  <thead>
+                    <tr>
+                      <th>结算编号</th>
+                      <th>申请时间</th>
+                      <th>银行账户名</th>
+                      <th>银行卡号</th>
+                      <th>结算人</th>
+                      <th>商品总额</th>
+                      <th>状态</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                    	<!-- 点击结算号可以查看订单详细 -->
+                      <td><a href="#" class="see_details">1231313</a></td>
+                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+                      <td>王先生</td>
+                      <td>233356555233356555</td>
+                      <td>K先生</td>
+                      <td>¥99</td>
+                      <td class="stu-tre"><span class="stu-l">待审核</span></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" class="see_details">1231313</a></td>
+                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+                      <td>233356555</td>
+                      <td>王先生</td>
+                      <td>K先生</td>
+                      <td>¥99</td>
+                      <td class="stu-tre"><span class="stu-l">审核通过</span></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" class="see_details">1231313</a></td>
+                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+                      <td>233356555</td>
+                      <td>王先生</td>
+                      <td>K先生</td>
+                      <td>¥99</td>
+                      <td class="stu-tre"><span class="stu-l">审核拒绝</span><a href="#" class="orddetialbtn">拒绝原因</a></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" class="see_details">1231313</a></td>
+                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+                      <td>233356555</td>
+                      <td>王先生</td>
+                      <td>K先生</td>
+                      <td>¥99</td>
+                      <td class="stu-tre"><span class="stu-l">结算成功</span></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" class="see_details">1231313</a></td>
+                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+                      <td>233356555</td>
+                      <td>王先生</td>
+                      <td>K先生</td>
+                      <td>¥99</td>
+                      <td class="stu-tre"><span class="stu-l">结算失败</span><a href="#" class="orddetialbtn">失败原因</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="ui-page">
+              	  <a rel="pre" href="#">上一页</a>
+                  <a rel="1" href="#">1</a>
+                  <a rel="2" href="#" class="ui-page-curr">2</a>
+                  <a rel="3" href="#">3</a>
+                  <a rel="4" href="#">4</a>
+                  <a rel="5" href="#">5</a>
+                  <span>...</span>
+                  <a rel="7" href="#">7777</a>
+                  <a rel="next" href="#">下一页</a>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  	<!-- 底部 -->
+	 <!--  [#include "/common/footer.ftl"] -->
+	 
+	  <script>
+	    $("#ordered-time-star").click(function(){
+			WdatePicker();
+			});
+	    $("#ordered-time-end").click(function(){
+			WdatePicker();
+			});
+	   
+	  </script>
+</body>
+</html>

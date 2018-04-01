@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/webapp/WEB-INF/template/admin/border=UTF-8
+encoding//src/main/webapp/WEB-INF/template/admin/mechant/audit.ftl=UTF-8
+encoding//src/main/webapp/WEB-INF/template/admin/member/list.ftl=UTF-8
+encoding//src/test/java=UTF-8

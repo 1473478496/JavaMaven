@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>订单详情</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+<body>
+    <!-- 引入头部文件 -->
+  <!--  [#include "/common/header.ftl"/] -->
+  <div class="wrap">
+    <div class="container-setting fix">
+    
+     <!-- 菜单 -->
+      <!-- [#include "/common/menu.ftl"/] -->
+      
+      <div class="container-middle">
+          <ul class="b-nav">
+            <li><a href="#">订单管理</a><span>></span></li>
+            <li><a href="#">订单详情</a></li>
+          </ul>
+          <!--结算申请-->
+          <div>
+            <div class="order-control">
+                <h4>订单详情</h4>
+				<div class="settle_container">
+					<div class="settle_left">
+						<table class="settle_table" width="100%"> 
+		                   <col width="20%" />
+		  				   <col width="30%" />
+		  				   <col width="20%" />
+		                  <tbody>
+		                    <tr>
+		                      <td class="sl_bg">订单编号</td>
+		                      <td>13221313221</td>
+		                      <td class="sl_bg">互市地点</td>
+		                      <td>东兴</td>
+		                    </tr>
+		                    <tr>
+		                      <td class="sl_bg">提交时间</td>
+		                      <td>2016-06-23</td>
+		                      <td class="sl_bg">贸易类型</td>
+		                      <td>进口</td>
+		                    </tr>
+		                    <tr>
+		                      <td class="sl_bg">顾客姓名</td>
+		                      <td>H先生</td>
+		                      <td class="sl_bg">结算单号</td>
+		                      <td>2016040612345</td>
+		                    </tr>
+		                    <tr>
+		                      <td class="sl_bg">国籍</td>
+		                      <td>中国</td>
+		                      <td class="sl_bg">结算流水号</td>
+		                      <td>2016040612345</td>
+		                    </tr>
+		                    <tr>
+		                      <td class="sl_bg">证件名称</td>
+		                      <td>身份证</td>
+		                      <td class="sl_bg">经营户姓名</td>
+		                      <td>DO THI LOAN</td>
+		                    </tr>
+		                    <tr>
+		                      <td class="sl_bg">证件号码</td>
+		                      <td>444326256565514</td>
+		                      <td class="sl_bg">商铺</td>
+		                      <td>B13栋8号</td>
+		                    </tr>
+		                  </tbody>
+		                </table>
+					</div>
+					<div class="settle_right">
+						<p class="settle_title">订单状态:<i>已支付</i></p>
+						<p class="p_reson">交易方式：在线支付</p>
+						<p class="p_reson">结算状态：待审核</p>
+					</div>
+				</div>
+				
+				<div class="settle_control">
+	              <div class="order-list settlescroll">
+	               <table class="order-list-tb"> 
+	                   <col width="10%" />
+	  				   <col width="35%" />
+	  				   <col width="15%" />
+	  				   <col width="15%" />
+	  				   <col width="10%" />
+	                  <thead>
+	                    <tr>
+	                      <th></th>
+	                      <th>商品名称</th>
+	                      <th>产地</th>
+	                      <th>单价</th>
+	                      <th>购买数量</th>
+	                      <th>商品金额</th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+	                    <tr>
+	                    	<!-- 点击图片与商品名称可以查看商品详细 -->
+	                      <td><a href="#"><img src="images/list_good_01.jpg" class="order_img" /></a></td>
+	                      <td><a href="#">商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称</a></td>
+	                      <td>越南</td>
+	                      <td>¥99</td>
+	                      <td>1</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                    <tr>
+		                  <td><a href="#"><img src="images/list_good_01.jpg" class="order_img" /></a></td>
+	                      <td><a href="#">商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称</a></td>
+	                      <td>越南</td>
+	                      <td>¥99</td>
+	                      <td>1</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                    <tr>
+		                  <td><a href="#"><img src="images/list_good_01.jpg" class="order_img" /></a></td>
+	                      <td><a href="#">商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称</a></td>
+	                      <td>越南</td>
+	                      <td>¥99</td>
+	                      <td>1</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                  </tbody>
+	                </table>
+	              </div>
+	              
+	               <div class="slcomfir_info">
+	                  	<!-- 结算总金额 -->
+	              		<p class="settletit"><span>订单总金额<em>256</em>元</span></p>
+	              		<p class="settletit"><span>实付   256  元</span></p>
+	              		
+	              		<!-- 如果是点击修改价格按钮,出现-金额变成可修改 -->
+	              		<p class="settletit"><span>订单总金额<input type="text" class="order_input" value="256"/>元</span></p>
+	              		
+	              		<!--点击修改出现   按钮 取消按钮返回之前页面-->
+		              	<div class="orderbtnbox">
+		                  <input type="submit" value="确认修改" id="editOrderBtn">
+		                  <input type="button" class="order_btnj" value="取消">
+		                </div>
+	              	</div>
+	            </div>
+	             
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  	<!-- 底部 -->
+	 <!--  [#include "/common/footer.ftl"] -->
+	 
+	 
+	 <!-- 提示弹框 -->
+	   <div class="tip_box">
+	    <div class="tip_title">修改成功</div>
+	    <div class="tip_main">正在跳转到订单列表...</div>
+	
+	    <div class="tip_footer">
+	      <a class="btn btn_yes">点击跳转...</a>
+	    </div>
+	  </div>
+	  <div class="tip_bg"></div>
+	   <script>
+		  // 弹出弹框
+		  function tip_fadeIn(){
+		      $('.tip_bg').fadeIn();
+		      $('.tip_box').show().animate({"opacity":"1"},200);
+		  }
+		  // 关闭弹框
+		  function tip_fadeOut(){
+		      $('.tip_box').animate({"opacity":"0"},200,function(){$('.tip_box').hide()});
+		      $('.tip_bg').fadeOut();
+		  }
+		  
+		  $(function(){
+			  $('#editOrderBtn').on('click',function(){
+				  tip_fadeIn(); 
+			  })
+			  
+			  $('.btn_yes').on('click',function(){
+				  tip_fadeOut(); 
+			  })
+			  
+		  })
+	  </script>
+</body>
+</html>

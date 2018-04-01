@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>广告管理</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="container-setting fix">
+      <div class="container-middle">
+          <ul class="b-nav">
+            <a href="#">广告管理</a><span>></span><a href="#">首页广告</a>
+          </ul>
+          <div class="main_title">广告管理</div>
+          <!--主要内容-->
+          <div class="wd_main">
+            <h3 class="proimgtit">banner图片</h3>
+            <!-- banner -->
+            <div class="ad_main">
+              <p class="add_adbox"><a href="javascript:;" class="add_ad">+添加</a></p>
+              <table class="order-list-tb">
+  				   <col width="30%" />
+  				   <col width="10%" />
+  				   <col width="35%" />
+  				   <col width="8%" />
+                <tr>
+                  <th>标题</th>
+                  <th>尺寸</th>
+                  <th>时间</th>
+                  <th>排序</th>
+                  <th>操作</th>
+                </tr>
+                <tr>
+                  <td>banner</td>
+                  <td>1920*450</td>
+                  <td>2016-08-17 19：00：00<span>至</span>2016-09-17 19：00：00</td>
+                  <td>1</td>
+                  <td><a href="javascript:;" class="ad_edit">编辑</a> <a href="javascript:;" onclike="fadeIn()"  class="ad_delete">删除</a></td>
+                </tr>
+                <tr>
+                  <td>banner</td>
+                  <td>1920*450</td>
+                  <td>2016-08-17 19：00：00<span>至</span>2016-09-17 19：00：00</td>
+                  <td>3</td>
+                  <td><a href="javascript:;" class="ad_edit">编辑</a> <a href="javascript:;" class="ad_delete">删除</a></td>
+                </tr>
+                <tr>
+                  <td>banner</td>
+                  <td>1920*450</td>
+                  <td>2016-08-17 19：00：00<span>至</span>2016-09-17 19：00：00</td>
+                  <td>2</td>
+                  <td><a href="javascript:;" class="ad_edit">编辑</a> <a href="javascript:;" class="ad_delete">删除</a></td>
+                </tr>
+              </table>
+
+            </div>
+            <!-- 顶部广告 -->
+            <h3 class="proimgtit">顶部图片</h3>
+            <div class="ad_main">
+              <p class="add_adbox"><a href="javascript:;" class="add_ad">+添加</a></p>
+              <table class="order-list-tb">
+              		<col width="30%" />
+  				   <col width="10%" />
+  				   <col width="40%" />
+                <tr>
+                  <th>标题</th>
+                  <th>尺寸</th>
+                  <th>时间</th>
+                  <th>操作</th>
+                </tr>
+                <tr>
+                  <td>顶部广告广告</td>
+                  <td>1920*110</td>
+                  <td>2016-08-17 19：00：00至2016-09-17 19：00：00</td>
+                  <td><a href="javascript:;" class="ad_edit">编辑</a> <a href="javascript:;" class="ad_delete">删除</a></td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通用提示弹框 -->
+  <div class="tip_box">
+    <div class="tip_title">标题</div>
+    <a href="javascript:;" class="tip_close"></a>
+    <div class="tip_main">是否删除“banner1”?</div>
+
+    <div class="tip_footer">
+      <button type="button" class="btn btn_yes" id="dialogSureBtn">确认</button>
+      <button type="button" class="btn btn_no" id="dialogCloseBtn">取消</button>
+    </div>
+  </div>
+  <div class="tip_bg"></div>
+
+  <script>
+
+  // 弹出弹框
+  function tip_fadeIn(dialogType){
+      $('.tip_bg').fadeIn();
+      $('.tip_box').show().animate({"opacity":"1"},200);
+      switch (dialogType) {
+      case 0:
+        $('.tip_title').text('提示');
+        break;
+      case 1:
+        $('.tip_title').text('警告');
+        break;
+      case 2:
+        $('.tip_title').text('成功');
+        $('.btn_no').hide();
+        break;
+      case 3:
+        $('.tip_title').text('错误');
+        $('.btn_no').hide();
+        break;
+      default:
+        $('.tip_title').text('提示')
+      };
+
+  }
+  // 关闭弹框
+  function tip_fadeOut(){
+      $('.tip_box').animate({"opacity":"0"},200,function(){$('.tip_box').hide()});
+      $('.tip_bg').fadeOut();
+  }
+
+  
+  $(function () {
+	$('.btn_no,.tip_close').click(tip_fadeOut);   //取消
+    $('.ad_delete').click(function(){
+      var title = $(this).parent().prev().prev().prev().text();
+      yes1 = new $(this).parent().parent();
+      
+      tip_fadeIn(0,'是否删除 '+title+' ?');  //0提示，1警告，2成功，3错误
+      $('.btn_yes').click(function(){   //确认
+    	  tip_fadeOut ();
+    	  yes1.detach();
+      })
+    });
+
+
+  });
+  </script>
+
+</body>
+</html>

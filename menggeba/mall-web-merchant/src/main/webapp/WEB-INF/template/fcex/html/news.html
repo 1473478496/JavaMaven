@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>消息中心</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+<body>
+   <!-- 引入头部文件 -->
+  <!--  [#include "/common/header.ftl"/] -->
+  
+  <div class="wrap">
+    <div class="container-setting fix">
+    
+	  <!-- 菜单 -->
+      <!-- [#include "/common/menu.ftl"/] -->
+      
+      <div class="container-middle">
+		 <ul class="b-nav">
+            <li><a href="#">商户管理</a><span>></span></li>
+            <li><a href="#">消息中心</a></li>
+          </ul>
+          
+          <!--结算总汇-->
+          <div class="order-control">
+              <h4>消息中心</h4>
+              <div class="newsbox">
+              		<ul class="newslist">
+              			<!-- 未读消息加类名class="noseenews" 已读的不加-->
+              			<li class="noseenews">
+              				<span><a href="#">消息消息</a></span><i>2016-02-12</i>
+              				<!-- 点击消息显示详细信息  -->
+              				<div class="allnews" style="display:none;">
+              					<div class="newmain">消息详细内容消息详细内容消息详细内容消息详细内容消息详细内容消息详细内容</div>
+              				</div>
+              			</li>
+              			<li><span><a href="#">消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息消息</a></span><i>2016-02-12</i></li>
+              			<li><span><a href="#">消息消息</a></span><i>2016-02-12</i></li>
+              			<li><span><a href="#">消息消息</a></span><i>2016-02-12</i></li>
+              			<li><span><a href="#">消息消息</a></span><i>2016-02-12</i></li>
+              		</ul>
+              		<div class="ui-page">
+		              	  <a rel="pre" href="#">上一页</a>
+		                  <a rel="1" href="#">1</a>
+		                  <a rel="2" href="#" class="ui-page-curr">2</a>
+		                  <a rel="3" href="#">3</a>
+		                  <a rel="4" href="#">4</a>
+		                  <a rel="5" href="#">5</a>
+		                  <span>...</span>
+		                  <a rel="7" href="#">7777</a>
+		                  <a rel="next" href="#">下一页</a>
+		              </div>
+              </div>
+          </div>
+          
+      </div>
+    </div>
+  </div>
+  
+  <!--脚部-->
+  <!--  [#include "/common/footer.ftl"] -->
+	
+	<script>
+		$(function(){
+			$('.newslist li a').toggle(function(){
+				$(this).parent().addClass('on').siblings('.allnews').slideDown();
+				$(this).parents('li').removeClass('noseenews');
+			},function(){
+				$(this).parent().removeClass('on').siblings('.allnews').slideUp();
+			})
+		})
+	</script>
+</body>
+</html>

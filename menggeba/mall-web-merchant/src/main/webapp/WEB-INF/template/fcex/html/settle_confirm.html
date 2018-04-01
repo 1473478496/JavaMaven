@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>结算确认</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- 引入头部文件 -->
+  <!--  [#include "/common/header.ftl"/] -->
+  <div class="wrap">
+    <div class="container-setting fix">
+    
+     <!-- 菜单 -->
+      <!-- [#include "/common/menu.ftl"/] -->
+      
+      <div class="container-middle">
+          <ul class="b-nav">
+            <li><a href="#">结算管理</a><span>></span></li>
+            <li><a href="#">结算申请</a><span>></span></li>
+            <li><a href="#">结算确认</a></li>
+          </ul>
+          <!--结算申请-->
+          
+            <div class="order-control settlecomfirm">
+              <h4>结算确认信息</h4>
+              <div class="form-container">
+              	<p class="settletit">已选<i class="settnum">5</i>笔订单 <span>结算总金额<em>256</em>元</span></p>
+              	<div class="order-list settlescroll">
+	                <table class="order-list-tb"> 
+	                   <col width="20%" />
+	  				   <col width="20%" />
+	  				   <col width="20%" />
+	  				   <col width="20%" />
+	                  <thead>
+	                    <tr>
+	                      <th>订单号</th>
+	                      <th>下单时间</th>
+	                      <th>买家账号</th>
+	                      <th>买家姓名</th>
+	                      <th>商品总额</th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+	                    <tr>
+	                    	<!-- 点击订单号可以查看订单详细  订单可以一次全导出来 通过样式控制超出最大高度显示滚动条-->
+	                      <td><a href="#" class="see_details">1231313</a></td>
+	                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+	                      <td>233356555</td>
+	                      <td>王先生</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="#" class="see_details">1231313</a></td>
+	                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+	                      <td>233356555</td>
+	                      <td>王先生</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="#" class="see_details">1231313</a></td>
+	                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+	                      <td>233356555</td>
+	                      <td>王先生</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="#" class="see_details">1231313</a></td>
+	                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+	                      <td>233356555</td>
+	                      <td>王先生</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="#" class="see_details">1231313</a></td>
+	                      <td><span>2016-7-11</span> <span>16:00:03</span></td>
+	                      <td>233356555</td>
+	                      <td>王先生</td>
+	                      <td>¥99</td>
+	                    </tr>
+	                  </tbody>
+	                </table>
+	              </div>
+              	<!-- 结算人信息，结算银行信息 ,2个选项没有关联关系-->
+              	<div class="slcomfir_info">
+              		<div class="confirmone">
+              			<span>结算人：</span>
+              			<select>
+              				<option value="">请选择</option>
+		                    <option value="">王宝强 - 证件号码</option>
+		                    <option value="">隔壁老宋 - 435444545445454566</option>
+		                </select>
+                  	</div>
+                  	<div class="confirmone">
+              			<span>结算银行信息：</span>
+              			<select>
+              				<option value="">请选择</option>
+		                    <option value="">王宝强 - 银行卡号</option>
+		                    <option value="">隔壁老宋 - 435444545445454566</option>
+		                </select>
+                  	</div>
+                  	<!-- 结算总金额 -->
+              		<p class="settletit"><span>结算总金额<em>256</em>元</span></p>
+              		
+              		<!-- 按钮 取消按钮返回之前申请页面-->
+	              	<div class="orderbtnbox">
+	                  <input type="submit" value="确认提交">
+	                  <input type="button" class="order_btnj" value="取消">
+	                </div>
+              	</div>
+              	
+              </div>
+            </div>
+            
+      </div>
+    </div>
+  </div>
+
+  	 <!-- 底部 -->
+	 <!--  [#include "/common/footer.ftl"] -->
+	 
+
+</body>
+</html>

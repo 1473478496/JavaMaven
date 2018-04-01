@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商品管理-商品分类</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+
+<body>
+  
+<!-- 需要引入头部公共文件 -->
+ <!--[#include "/common/header.ftl"/] -->
+  <div class="wrap">
+    <div class="container-setting fix">
+      <!-- 需要引入导航公共文件 -->
+       <!--[#include "/common/menu.ftl"/] -->
+       
+      <div class="container-middle">
+          <ul class="b-nav">
+            <li><a href="#">商品管理</a><span>></span></li>
+            <li><a href="#">商品分类</a></li>
+          </ul>
+	          
+       	  <!--商品分类管理-->
+           <div class="order-control">
+              <h4>商品分类管理</h4>
+              <div class="proinfo procategory">
+              		<!--商品规格-->
+          			 <div class="ordstu-nav">
+		                	<a href="javascript:;" class="first">添加分类</a>
+		              </div>
+					  <table class="order-list-tb prolisttable">
+						  	 <col width="50%" />
+	  				   		 <col width="15%" />
+	  				   		 <col width="15%" />
+			                  <thead>
+			                    <tr>
+			                      <th>分类名称</th>
+			                      <th>是否置顶</th>
+			                      <th>排序</th>
+			                      <th>操作</th>
+			                    </tr>
+			                  </thead>
+		                  <tbody>
+		                    <tr>
+		                      <td colspan="4">
+		                      		<div class="categorybox">
+                      					<div class="categoryname">
+                      						<span class="categynamezone pro_re"><em>-</em><i>生活家居</i></span>
+                      					</div>
+                      					<div class="categorytop">
+                    						<span>是</span>
+                      					</div>
+                      					<div class="categorynum">
+                      						<span>1</span>
+                      					</div>
+                      					<div class="categorydo">
+               								<a href="javascirpt:void(0);" class="proifclose">编辑</a>
+               								<a href="javascirpt:void(0);" class="prodelbtn prodeltop"></a>
+                      					</div>
+		                      		</div>
+		                      		
+		                      		<!--点击分类名称，展示二级分类categy_menus-->
+		                      		<div class="categy_menus">
+                      					<div class="categoryname">
+                      						<i>子菜单生活家居</i>
+                      					</div>
+                      					<div class="categorytop"></div>
+                      					<div class="categorynum">
+           									<span>1</span>
+                      					</div>
+                      					<div class="categorydo">
+       										<a href="javascirpt:void(0);" class="proifclose">编辑</a>
+               								<a href="javascirpt:void(0);" class="prodelbtn prodelsec"></a>
+                      					</div>
+		                      		</div>
+		                      </td>
+	                      </tr>
+	                      <tr>
+		                      <td colspan="4">
+		                      		<div class="categorybox oh">
+                      					<div class="categoryname">
+               								<span class="categynamezone pro_re"><i>电子科技</i></span>
+                      					</div>
+                      					<div class="categorytop">
+               								<span>是</span>
+                      					</div>
+                      					<div class="categorynum">
+               								<span>2</span>
+                      					</div>
+                      					<div class="categorydo">
+               								<a href="javascirpt:void(0);" class="proifclose">编辑</a>
+               								<a href="javascirpt:void(0);" class="prodelbtn prodeltop"></a>
+                      					</div>
+		                      		</div>
+		                      </td>
+	                      </tr>
+	                      <tr>
+		                      <td colspan="4">
+		                      		<div class="categorybox oh">
+                      					<div class="categoryname">
+               								<span class="categynamezone pro_re"><em>-</em><i>电子科技</i></span>
+                      					</div>
+                      					<div class="categorytop">
+                    						<span>是</span>
+                      					</div>
+                      					<div class="categorynum">
+                    						<span>3</span>
+                      					</div>
+                      					<div class="categorydo">
+                    						<a href="javascirpt:void(0);" class="proifclose">编辑</a>
+                    						<a href="javascirpt:void(0);" class="prodelbtn prodeltop"></a>
+                      					</div>
+		                      		</div>
+		                      		
+		                      		<div class="categy_menus">
+                      					<div class="categoryname">
+                    						<i>子菜单生活家居</i>
+                      					</div>
+                      					<div class="categorytop"></div>
+                      					<div class="categorynum">
+                    						<span>1</span>
+                      					</div>
+                      					<div class="categorydo">
+               								<a href="javascirpt:void(0);" class="proifclose">编辑</a>
+               								<a href="javascirpt:void(0);" class="prodelbtn prodelsec"></a>
+                      					</div>
+		                      		</div>
+		                      		
+		                      		<div class="categy_menus">
+                      					<div class="categoryname">
+               								<i>子菜单生活家居</i>
+                      					</div>
+                      					<div class="categorytop"></div>
+                      					<div class="categorynum">
+               								<span>2</span>
+                      					</div>
+                      					<div class="categorydo">
+               								<a href="javascirpt:void(0);" class="proifclose">编辑</a>
+               								<a href="javascirpt:void(0);" class="prodelbtn prodelsec"></a>
+                      					</div>
+		                      		</div>
+		                      </td>
+	                      </tr>
+		                  </tbody>
+		            </table>
+              </div>
+           </div>
+      </div>
+      
+    </div>
+  </div>
+
+	  <!-- 底部 -->
+	  <!-- [#include "/common/footer.ftl"/] -->
+	  <script>
+	  		$(function(){
+	  			//顶级菜单展开
+	  				$('.categynamezone em').toggle(function(){
+  								$(this).parents(".categorybox").siblings('.categy_menus').toggle();
+  								$(this).html("+");
+  					},function(){
+  								$(this).parents(".categorybox").siblings('.categy_menus').toggle();
+  								$(this).html("-");
+  					});
+  					
+  					//二级菜单删除操作
+  					$(".prodelsec").click(function(){
+  							var lg=$(this).parents('.categy_menus').siblings('.categy_menus').length;
+  							if(lg==0){
+  									$(this).parents('.categy_menus').siblings('.categorybox').find('em').remove();
+  							}
+  							$(this).parents('.categy_menus').remove();
+  					})
+  					
+  					//顶级菜单删除操作
+  					$('.prodeltop').click(function(){
+  							$(this).parents('tr').remove();
+  					})
+	  		})
+	  </script>
+</body>
+<html>
+
+
+
+

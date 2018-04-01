@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" name="view">
+	<diskStore path="${java.io.tmpdir}/${system.project_name}/cache"/>
+	<cacheManagerPeerProviderFactory
+		class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
+		properties="connect=TCP(bind_addr=localhost;bind_port=60001):  
+TCPPING(initial_hosts=localhost[60001],localhost[60002];  
+port_range=1;timeout=5000;num_initial_members=2):MERGE2(min_interval=3000;max_interval=5000):  
+FD_ALL(interval=5000;timeout=20000):FD(timeout=5000;max_tries=48;):VERIFY_SUSPECT(timeout=1500):pbcast.NAKACK(use_mcast_xmit=false;retransmit_timeout=100,200,300,600,1200,2400,4800;discard_delivered_msgs=true):pbcast.STABLE(stability_delay=1000;desired_avg_gossip=20000;max_bytes=0):pbcast.GMS(print_local_addr=true;join_timeout=5000)"
+		propertySeparator="::" />
+
+	<defaultCache maxElementsInMemory="10"
+		overflowToDisk="true" eternal="false" memoryStoreEvictionPolicy="LRU"
+		maxElementsOnDisk="10000000" diskExpiryThreadIntervalSeconds="600"
+		timeToIdleSeconds="3600" timeToLiveSeconds="100000" diskPersistent="false">
+		<cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+			properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+	</defaultCache>
+
+<cache name="authorization" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=false,  
+        replicateUpdatesViaCopy=false,replicateRemovals=false " />
+		</cache>
+			<cache name="setting" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		<cache name="logConfig" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="template" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="shipping" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="area" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="seo" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="adPosition" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="memberAttribute" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="navigation" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="tag" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="friendLink" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="brand" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="article" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="articleCategory" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="product" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="hotProduct" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="productCategory" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="review" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="consultation" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+		
+		<cache name="promotion" maxElementsInMemory="10" eternal="false"
+			overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
+			memoryStoreEvictionPolicy="LRU">
+			<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+				properties="replicateAsynchronously=true, replicatePuts=true,replicateUpdates=true,  
+        replicateUpdatesViaCopy=true,replicateRemovals=true " />
+		</cache>
+</ehcache>
