@@ -1,0 +1,3 @@
+1 、把 hibernate-jpa-2.0-api-1.0.0.Final.jar 放到JDK 的 jre\lib\ext 目录下;
+2、dbconfig.properties、log4j.properties、sysConfig.properties配置环境修改，与正式环境比对确认无误后再提交。
+3、发送短信的定时任务，只能一台服务器执行。时间配置在：MessageTask.java 24 行，其他服务器注释此行即可。

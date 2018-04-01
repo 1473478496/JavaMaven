@@ -1,0 +1,83 @@
+package cn.sunline.repair.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+
+/**   
+ * @Title: Entity
+ * @Description: 出现车维修管理维修信息
+ * @author wuhualin
+ * @date 2016-11-22
+ * @version V1.0   
+ *
+ */
+@Entity
+@Table(name = "rp_maintenance_remark")
+@DynamicUpdate(true)
+@DynamicInsert(true)
+@SuppressWarnings("serial")
+public class MaintenanceRemarkEntity implements java.io.Serializable{
+	/**id*/
+    private java.lang.String id;
+    /**维修日期*/
+    private java.util.Date maintenanceTime;
+    /**维修信息*/
+    private java.lang.String maintenanceInformation;
+    /**mainID*/
+    private java.lang.String mainId;
+    
+	@Id
+	@GeneratedValue(generator = "paymentableGenerator")
+	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+	@Column(name ="ID",nullable=false,length=200)
+	public java.lang.String getId() {
+		return id;
+	}
+	public void setId(java.lang.String id) {
+		this.id = id;
+	}
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  维修日期
+	 */
+	@Column(name ="maintenance_time")
+	public java.util.Date getMaintenanceTime() {
+		return maintenanceTime;
+	}
+	public void setMaintenanceTime(java.util.Date maintenanceTime) {
+		this.maintenanceTime = maintenanceTime;
+	}
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  维修信息
+	 */
+	@Column(name ="maintenance_information")
+	public java.lang.String getMaintenanceInformation() {
+		return maintenanceInformation;
+	}
+	public void setMaintenanceInformation(java.lang.String maintenanceInformation) {
+		this.maintenanceInformation = maintenanceInformation;
+	}
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  
+	 */
+	@Column(name ="main_id")
+	public java.lang.String getMainId() {
+		return mainId;
+	}
+	public void setMainId(java.lang.String mainId) {
+		this.mainId = mainId;
+	}
+    
+}

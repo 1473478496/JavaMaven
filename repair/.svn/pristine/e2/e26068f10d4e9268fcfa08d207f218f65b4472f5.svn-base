@@ -1,0 +1,155 @@
+
+package cn.sunline.repair.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+
+/**   
+ * @Title: Entity
+ * @Description: 出现车维修管理维修信息
+ * @author wuhualin
+ * @date 2016-11-22
+ * @version V1.0   
+ *
+ */
+@Entity
+@Table(name = "RP_MAINTENANCE_REMARK")
+@DynamicUpdate(true)
+@DynamicInsert(true)
+@SuppressWarnings("serial")
+public class MaintenanceRemarkEntity implements java.io.Serializable{
+	/**id*/
+    private java.lang.String id;
+    /**维修日期*/
+    private java.util.Date maintenanceTime;
+    /**维修信息*/
+    private java.lang.String maintenanceInformation;
+    /**mainID*/
+    private java.lang.String mainId;
+    /**报案号id*/
+    private java.lang.String reportNoId;
+    /**保单号id*/
+    private java.lang.String policyNoId;
+    /**图片路径*/
+    private java.lang.String imgagePath;
+    /**是否有效*/
+    private java.lang.String isvalId;
+    /**更新时间*/
+    private java.util.Date updTm;
+    /**更新人*/
+    private java.lang.String updCode;
+    /**创建时间*/
+    private java.util.Date crtTm;
+    /**创建人*/
+    private java.lang.String crtCode;
+    
+	@Id
+	@GeneratedValue(generator = "paymentableGenerator")
+	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+	@Column(name ="ID",nullable=false,length=200)
+	public java.lang.String getId() {
+		return id;
+	}
+	public void setId(java.lang.String id) {
+		this.id = id;
+	}
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  维修日期
+	 */
+	@Column(name ="MAINTENANCE_TIME")
+	public java.util.Date getMaintenanceTime() {
+		return maintenanceTime;
+	}
+	public void setMaintenanceTime(java.util.Date maintenanceTime) {
+		this.maintenanceTime = maintenanceTime;
+	}
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  维修信息
+	 */
+	@Column(name ="MAINTENANCE_INFORMATION")
+	public java.lang.String getMaintenanceInformation() {
+		return maintenanceInformation;
+	}
+	public void setMaintenanceInformation(java.lang.String maintenanceInformation) {
+		this.maintenanceInformation = maintenanceInformation;
+	}
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  
+	 */
+	@Column(name ="MAIN_ID")
+	public java.lang.String getMainId() {
+		return mainId;
+	}
+	public void setMainId(java.lang.String mainId) {
+		this.mainId = mainId;
+	}
+	@Column(name ="REPORTNO_ID")
+	public java.lang.String getReportNoId() {
+		return reportNoId;
+	}
+	public void setReportNoId(java.lang.String reportNoId) {
+		this.reportNoId = reportNoId;
+	}
+	@Column(name ="POLICYNO_ID")
+	public java.lang.String getPolicyNoId() {
+		return policyNoId;
+	}
+	public void setPolicyNoId(java.lang.String policyNoId) {
+		this.policyNoId = policyNoId;
+	}
+	@Column(name ="IMGAGEPATH")
+	public java.lang.String getImgagePath() {
+		return imgagePath;
+	}
+	public void setImgagePath(java.lang.String imgagePath) {
+		this.imgagePath = imgagePath;
+	}
+	@Column(name ="ISVALID")
+	public java.lang.String getIsvalId() {
+		return isvalId;
+	}
+	public void setIsvalId(java.lang.String isvalId) {
+		this.isvalId = isvalId;
+	}
+	@Column(name ="UPD_TM")
+	public java.util.Date getUpdTm() {
+		return updTm;
+	}
+	public void setUpdTm(java.util.Date updTm) {
+		this.updTm = updTm;
+	}
+	@Column(name ="UPD_CODE")
+	public java.lang.String getUpdCode() {
+		return updCode;
+	}
+	public void setUpdCode(java.lang.String updCode) {
+		this.updCode = updCode;
+	}
+	@Column(name ="CRT_TM")
+	public java.util.Date getCrtTm() {
+		return crtTm;
+	}
+	public void setCrtTm(java.util.Date crtTm) {
+		this.crtTm = crtTm;
+	}
+	@Column(name ="CRT_CODE")
+	public java.lang.String getCrtCode() {
+		return crtCode;
+	}
+	public void setCrtCode(java.lang.String crtCode) {
+		this.crtCode = crtCode;
+	}
+}

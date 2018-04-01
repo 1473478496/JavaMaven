@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-web-app xmlns="http://www.bea.com/ns/weblogic/90">
+	
+	<context-root>repair</context-root>
+	<container-descriptor>
+		<index-directory-enabled>true</index-directory-enabled>   
+	<!-- 关键！！！先加载web-inf下的jar包 -->   
+	<prefer-web-inf-classes>true</prefer-web-inf-classes>   
+	<show-archived-real-path-enabled>true</show-archived-real-path-enabled>  
+	</container-descriptor>
+	<charset-params>
+		<input-charset>
+			<resource-path>/*</resource-path>
+			<java-charset-name>UTF-8</java-charset-name>
+		</input-charset>
+	</charset-params>
+</weblogic-web-app>

@@ -1,0 +1,62 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@include file="/context/mytags.jsp"%>
+<t:base type="jquery,easyui,tools,DatePicker"></t:base>
+<div class="easyui-layout" fit="true">
+  <div region="center" style="padding:0px;border:0px">
+  <t:datagrid name="actualDangerList" title="实际车商维修管理  " actionUrl="dangerController.do?actualDatagrid" idField="id" 
+  queryMode="group"  fit="true"  nowrap = "false" onLoadSuccess ="startEdit" editCell ="true">
+   <t:dgCol title="编号" field="id" hidden="true"></t:dgCol>
+   <t:dgCol title="理赔机构" field="claimDepartment" hidden="true" query="false" width="120"></t:dgCol>
+   <t:dgCol title="车牌号" field="plateNo" query="true" width="100"></t:dgCol> 
+   <t:dgCol title="车架号" field="frmNo" query="true" width="100"></t:dgCol>
+   <t:dgCol title="发动机号" field="engineNo" query="true"  width="100"></t:dgCol> 
+   <t:dgCol title="车辆品牌" field="vehlcleName" query="true" width="100"></t:dgCol>
+   <t:dgCol title="维修状态" field="maintenanceStatus" dictionary="repstatus" width="100"></t:dgCol> 
+   <t:dgCol title="创建时间" field="crtTm" query="false" width="100"></t:dgCol>
+	<t:dgToolBar title="编辑" icon="icon-edit" url="dangerController.do?addorupdate" funname="update"></t:dgToolBar>
+  <t:dgToolBar title="查看" icon="icon-search" url="dangerController.do?addorupdate" funname="detail"></t:dgToolBar>
+  <t:dgToolBar title="查看图片" icon="icon-search" url="dangerController.do?showImage" funname="detail"></t:dgToolBar>
+  </t:datagrid>
+  </div>
+ </div>
+ 
+ <script type="text/javascript">
+	//批量处理的方法
+	function allDealRules(obj){
+		 var id = obj.id;
+		//  得到rows对象
+		var rows = $('#dangerList').datagrid("getRows"); // 这段代码是// 对某个单元格赋值
+		//得到本页显示的数量
+		var pagesize=  $('#dangerList').datagrid('getPager').data("pagination").options.pageSize ;
+		for(var i = 0 ; i < pagesize ; i ++ ){
+			if(1 == obj.value){
+				rows[i][id] = '1' ;
+				$('#dangerList').datagrid('refreshRow', i);
+			}else if(0 == obj.value){
+				rows[i][id] = '0' ;
+				$('#dangerList').datagrid('refreshRow', i);
+			}
+			allFlag = true ; 
+		}	
+	}
+	
+	function startEdit(){
+		//解决行号错位的问题
+		$('#dangerList').datagrid('fixRowHeight')  
+		
+		//进入页面时未行编辑模式
+		var pagesize=  $('#dangerList').datagrid('getPager').data("pagination").options.pageSize ;
+		for(var i = 0 ; i < pagesize ; i ++ ){
+			$('#dangerList').datagrid('beginEdit',i);
+		}
+		
+	}
+	
+	function endEdit() {
+		var pagesize = $('#dangerList').datagrid('getPager').data("pagination").options.pageSize;
+		for ( var i = 0; i < pagesize; i++) {
+			$('#dangerList').datagrid('endEdit', i);
+		}
+	}
+	
+ </script>

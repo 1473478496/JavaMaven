@@ -1,0 +1,259 @@
+package cn.sunline.repair.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import oracle.security.o3logon.C1;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import cn.sunline.core.common.controller.BaseController;
+import cn.sunline.core.common.exception.BusinessException;
+import cn.sunline.core.common.hibernate.qbc.CriteriaQuery;
+import cn.sunline.core.common.model.json.AjaxJson;
+import cn.sunline.core.common.model.json.DataGrid;
+import cn.sunline.core.constant.Globals;
+import cn.sunline.core.util.MyBeanUtils;
+import cn.sunline.core.util.ResourceUtil;
+import cn.sunline.core.util.StringUtil;
+import cn.sunline.repair.entity.DealerInfoEntity;
+import cn.sunline.repair.entity.MaintenanceRemarkEntity;
+import cn.sunline.repair.service.DangerServiceI;
+import cn.sunline.repair.service.MaintenanceRemarkServiceI;
+import cn.sunline.tag.core.easyui.TagUtil;
+import cn.sunline.web.system.pojo.base.TSUser;
+import cn.sunline.web.system.service.SystemService;
+import cn.sunline.ws.foreignInterface.constants.RepairConstants;
+import cn.sunline.ws.foreignInterface.dao.IRepairMainDao;
+import cn.sunline.ws.foreignInterface.entity.RepairMainInfo;
+
+
+
+/**   
+ * @Title: Controller
+ * @Description: 出险车维修管理
+ * @author wuhualin
+ * @date 2016-11-19 
+ * @version V1.0   
+ *
+ */
+@Controller
+@RequestMapping("/dangerController")
+public class DangerController extends BaseController {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(DangerController.class);
+	
+	@Autowired
+	private DangerServiceI dangerService;
+	@Autowired
+	private MaintenanceRemarkServiceI maintenanceRemarkService; 
+	@Autowired
+	private SystemService systemService;
+	@Autowired
+	private IRepairMainDao repairMainDao;
+
+	/**
+	 * 出险车维修管理列表 页面跳转
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "recommendList")
+	public ModelAndView list(HttpServletRequest request) {
+		return new ModelAndView("system/repair/danger/recommendDangerList");
+	}
+	
+	/**
+	 * easyui AJAX请求数据
+	 * 
+	 * @param request
+	 * @param response
+	 * @param dataGrid
+	 * @param user
+	 */
+
+	@RequestMapping(params = "recommendDatagrid")
+	public void datagrid(RepairMainInfo repairMainInfo,
+			HttpServletRequest request, HttpServletResponse response,
+			DataGrid dataGrid) {
+		TSUser user = ResourceUtil.getSessionUserName();
+		String username = user.getUserName();
+		String sql = "select dealer_code from rp_dealer_maintenance where contacts_tel='"+username+"'";
+		List<Object> objList=systemService.findListbySql(sql);
+		Date dBefore = new Date();
+		Calendar calendar = Calendar.getInstance(); //得到日历
+		calendar.setTime(new Date());//把当前时间赋给日历
+		calendar.add(Calendar.MONTH, -3);  //设置为前3月 
+		dBefore = calendar.getTime();   //得到前3月的时间
+		CriteriaQuery cq = new CriteriaQuery(RepairMainInfo.class, dataGrid);
+		cn.sunline.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq,repairMainInfo, request.getParameterMap());
+		cq.gt("crtTm", dBefore);
+		cq.lt("crtTm", new Date());
+		if(objList != null&&objList.size()>0){
+			cq.in("repairNo",objList.toArray());
+		}else{
+			cq.eq("repairNo", "");
+			cq.isNotNull("repairNo");
+		}
+//		cq.between("crtTm", defaultStartDate, defaultEndDate);
+		// 查询条件组装器
+		cq.add();
+		this.dangerService.getDataGridReturn(cq, true);
+		TagUtil.datagrid(response, dataGrid);
+	}
+	
+	
+	/**
+	 * 出险车维修维护列表页面跳转
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "addorupdate")
+	public ModelAndView addorupdate(RepairMainInfo repairMainInfo, HttpServletRequest req) {
+		if (StringUtil.isNotEmpty(repairMainInfo.getId())) {
+			repairMainInfo = dangerService.getEntity(RepairMainInfo.class, repairMainInfo.getId());
+			req.setAttribute("dangerPage", repairMainInfo);
+			
+		}
+		String id=req.getParameter("id");
+		String hql=" from MaintenanceRemarkEntity where mainId='"+id+"'";
+		List<MaintenanceRemarkEntity> mainList=systemService.findByQueryString(hql);
+		req.setAttribute("mainList", mainList);
+		return new ModelAndView("system/repair/danger/actualDanger");
+	}
+	
+	@RequestMapping(params = "actualList")
+	public ModelAndView actualList(HttpServletRequest request) {
+		return new ModelAndView("system/repair/danger/actualDangerList");
+	}
+	
+
+	@RequestMapping(params = "actualDatagrid")
+	public void actualDatagrid(RepairMainInfo repairMainInfo,
+			HttpServletRequest request, HttpServletResponse response,
+			DataGrid dataGrid) {
+		Date dBefore = new Date();
+		Calendar calendar = Calendar.getInstance(); //得到日历
+		calendar.setTime(new Date());//把当前时间赋给日历
+		calendar.add(Calendar.MONTH, -3);  //设置为前3月 
+		dBefore = calendar.getTime();   //得到前3月的时间
+		CriteriaQuery cq = new CriteriaQuery(RepairMainInfo.class, dataGrid);
+		cn.sunline.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq,repairMainInfo, request.getParameterMap());
+		TSUser user = ResourceUtil.getSessionUserName();
+		String username = user.getUserName();
+		cq.gt("crtTm", dBefore);
+		cq.lt("crtTm", new Date());
+		DealerInfoEntity dealerInfoEntity = new DealerInfoEntity();
+		String die = dealerInfoEntity.getDealerCode();
+		String sql = "select dealer_code from rp_dealer_maintenance where contacts_tel='"+username+"'";
+		List<Object> objList=systemService.findListbySql(sql);
+		if(objList != null&&objList.size()>0){
+			cq.in("repairNo",objList.toArray());
+		}else{
+			cq.eq("repairNo", "");
+			cq.isNotNull("repairNo");
+		}
+		cq.add();
+		// 查询条件组装器
+		this.dangerService.getDataGridReturn(cq, true);
+		TagUtil.datagrid(response, dataGrid);
+	}
+	
+	
+	
+	/**
+	 * 更新出险车维修中信息
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(params = "update")
+	@ResponseBody
+	public AjaxJson update(RepairMainInfo repairMainInfo, HttpServletRequest request) {
+		String remarkIds=request.getParameter("remarkIds");
+		String maintenanceTimes=request.getParameter("maintenanceTimes");
+		String maintenanceInformations=request.getParameter("maintenanceInformations");
+		String remarkId[]=remarkIds.split(",");
+		String maintenanceTime[]=(maintenanceTimes.split(","));
+		String maintenanceInformation[]=maintenanceInformations.split("\\*");
+
+		String message = null;
+		AjaxJson ajaxJson = new AjaxJson();
+		HttpSession session = request.getSession();
+		TSUser user=(TSUser) session.getAttribute(ResourceUtil.LOCAL_CLINET_USER);
+		  if (StringUtil.isNotEmpty(repairMainInfo.getId())) {
+			message = "出险车维修中信息更新成功";
+			RepairMainInfo repairMainInfo2 = dangerService.get(RepairMainInfo.class, repairMainInfo.getId());
+			try {
+				repairMainInfo2.setUpdTm(new Date());
+				repairMainInfo2.setUpdCde(user.getUserName());
+				MyBeanUtils.copyBeanNotNull2Bean(repairMainInfo, repairMainInfo2);
+				dangerService.saveOrUpdate(repairMainInfo2);
+				
+				for (int i = 0; i <remarkId.length; i++) {
+					MaintenanceRemarkEntity maintenanceRemarkEntity = maintenanceRemarkService.get(MaintenanceRemarkEntity.class, remarkId[i]);
+					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//小写的mm表示的是分钟  yyyy/mm/dd hh24:mi:ss 
+					Date date=sdf.parse(maintenanceTime[i]);
+					maintenanceRemarkEntity.setMaintenanceTime(date);
+					maintenanceRemarkEntity.setMaintenanceInformation(maintenanceInformation[i]);
+					maintenanceRemarkService.saveOrUpdate(maintenanceRemarkEntity);
+				}
+
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "出险车维修中信息更新失败";
+			}
+		  }
+        
+        ajaxJson.setMsg(message);
+		return ajaxJson;
+	}
+
+
+	/**
+	 * 添加维修信息
+	 * 
+	 * @param ids
+	 * @return
+	 * @throws ParseException 
+	 */
+	@RequestMapping(params = "doAddRemark")
+	@ResponseBody
+	public AjaxJson doAddRemark(MaintenanceRemarkEntity remark, HttpServletRequest request) throws ParseException {
+		String mainId=request.getParameter("mainId");
+		String maintenanceTime=request.getParameter("maintenanceTime");
+		String maintenanceInformation=StringUtil.getEncodePra(request.getParameter("maintenanceInformation"));
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//小写的mm表示的是分钟   
+		Date date=sdf.parse(maintenanceTime);
+		remark.setMainId(mainId);
+		remark.setMaintenanceTime(date);
+		remark.setMaintenanceInformation(maintenanceInformation);
+		String message = null;
+		AjaxJson ajaxJson = new AjaxJson();
+		message = "维修信息添加成功";
+		try{
+			maintenanceRemarkService.save(remark);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+		}catch(Exception e){
+			e.printStackTrace();
+			message = "维修信息添加失败";
+			throw new BusinessException(e.getMessage());
+		}
+		ajaxJson.setMsg(message);
+		return ajaxJson;
+	}
+}

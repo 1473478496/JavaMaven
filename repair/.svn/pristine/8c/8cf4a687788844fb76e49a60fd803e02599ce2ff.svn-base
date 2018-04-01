@@ -1,0 +1,43 @@
+<%@ page language="java" import="java.util.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@include file="/context/mytags.jsp"%>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>出险车维修管理</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <t:base type="jquery,easyui,tools,DatePicker"></t:base>
+  <link href="<%=basePath %>/plug-in/uploadify/css/uploadify.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="<%=basePath%>/plug-in/uploadify/jquery.uploadify-3.1.js"></script>
+  <script type="text/javascript">
+   $(function(){
+       $("#imgId").click(function(){
+           var width = $(this).width();
+           if(width==100)
+           {
+               $(this).width(200);
+               $(this).height(300);
+           }
+           else
+           {
+               $(this).width(100);
+               $(this).height(150);
+           }
+       });
+       
+      
+   });
+   /* function enlargeImage1(){
+	   image1.height="300"
+	   }
+	   function dropImage1(){
+	   image1.height="150"
+	   } */
+    </script>
+ </head>
+ <body>
+		<c:forEach var="imgObj" items="${objList }">
+			<img id="imgId" name="image1" src="${webRoot }/uploadController/export.do?id=${imgObj.id }" style="width:100px;height:100px;padding: 5px;margin: 5px;border: 1px solid #ccc;"
+			 ondblclick="enlargeImage1()" onclick="dropImage1()">
+		</c:forEach>
+ </body>
+</html>

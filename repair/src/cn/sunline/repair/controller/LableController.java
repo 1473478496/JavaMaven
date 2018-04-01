@@ -1,0 +1,272 @@
+package cn.sunline.repair.controller;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import cn.sunline.core.beanvalidator.BeanValidators;
+import cn.sunline.core.common.controller.BaseController;
+import cn.sunline.core.common.hibernate.qbc.HqlQuery;
+import cn.sunline.core.common.hibernate.qbc.PageList;
+import cn.sunline.core.common.model.json.AjaxJson;
+import cn.sunline.core.common.model.json.DataGrid;
+import cn.sunline.repair.entity.LableEntity;
+import cn.sunline.repair.service.LableServiceI;
+import cn.sunline.tag.core.easyui.TagUtil;
+
+
+/**   
+ * @Title: Controller
+ * @Description: 厂牌信息维护
+ * @author zhangdaihao
+ * @date 2016-10-13 18:05:02
+ * @version V1.0   
+ *
+ */
+@Controller
+@RequestMapping("/lableController")
+public class LableController extends BaseController {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(LableController.class);
+
+	@Autowired
+	private LableServiceI lableService;
+	@Autowired
+	private Validator validator;
+	
+
+
+	/**
+	 * 厂牌信息维护列表 页面跳转
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "list")
+	public ModelAndView list(HttpServletRequest request) {
+		return new ModelAndView("system/repair/lable/lableList");
+	}
+	/**
+	 * easyui AJAX请求数据
+	 * 
+	 * @param request
+	 * @param response
+	 * @param dataGrid
+	 * @param user
+	 */
+
+	@SuppressWarnings("unused")
+	@RequestMapping(params = "datagrid")
+	public void datagrid(LableEntity lable,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		int number1=(dataGrid.getPage()-1)*dataGrid.getRows();
+		int number2=dataGrid.getPage()*dataGrid.getRows();
+		String moedlBrand = request.getParameter("moedlBrand");
+		String brandCode = request.getParameter("brandCode");
+		if(brandCode!=null&&!"".equals(brandCode)){
+			brandCode = brandCode.toUpperCase();
+		}
+		String sql = "select * from (select t.*,rownum rn from(select distinct 1 id,CARBRAND moedlBrand,brandCode brandCode,1 modelCode,1 modelName,1 notes,1 crtTm,1 crtCde,1 updTm,1 updCde from vhl order by moedlBrand desc)t) where rn>'"+number1+"' and rn<= '"+number2+"'";
+		String sql2 = "select * from (select t.*,rownum rn from(select distinct 1 id,CARBRAND moedlBrand,brandCode brandCode,1 modelCode,1 modelName,1 notes,1 crtTm,1 crtCde,1 updTm,1 updCde from vhl where CARBRAND like '%"+moedlBrand+"%' order by moedlBrand desc)t) where rn>'"+number1+"' and rn<= '"+number2+"'";
+		String sql3 = "select * from (select t.*,rownum rn from(select distinct 1 id,CARBRAND moedlBrand,brandCode brandCode,1 modelCode,1 modelName,1 notes,1 crtTm,1 crtCde,1 updTm,1 updCde from vhl where CARBRAND like '%"+brandCode+"%' order by moedlBrand desc)t) where rn>'"+number1+"' and rn<= '"+number2+"'";
+		String sql4 = "select * from (select t.*,rownum rn from(select distinct 1 id,CARBRAND moedlBrand,brandCode brandCode,1 modelCode,1 modelName,1 notes,1 crtTm,1 crtCde,1 updTm,1 updCde from vhl where CARBRAND like '%"+moedlBrand+"%' and brandcode like '%"+brandCode+"%' order by moedlBrand desc)t) where rn>'"+number1+"' and rn<= '"+number2+"'";
+		if ("".equals(moedlBrand) && "".equals(brandCode) || moedlBrand == null&& brandCode == null) {
+			String count1 = "select count(distinct(CARBRAND)) from vhl";
+			Long count2 = lableService.getCountForJdbc(count1);
+			HqlQuery hq = new HqlQuery(LableEntity.class, sql, dataGrid);
+			PageList rdList = lableService.getPageListBySql(hq, true);
+			List<LableEntity> objList1 = rdList.getResultList();
+			dataGrid.setResults(objList1);
+			dataGrid.setTotal(count2.intValue());
+			TagUtil.datagrid(response, dataGrid);
+		} else if (moedlBrand != null && !"".equals(moedlBrand)&& brandCode == null || "".equals(brandCode)) {
+			String count1 = "select count(distinct(CARBRAND)) from vhl where CARBRAND like '%"
+					+ moedlBrand + "%'";
+			Long count2 = lableService.getCountForJdbc(count1);
+			HqlQuery hq = new HqlQuery(LableEntity.class, sql2, dataGrid);
+			PageList rdList = lableService.getPageListBySql(hq, true);
+			List<LableEntity> objList1 = rdList.getResultList();
+			dataGrid.setResults(objList1);
+			dataGrid.setTotal(count2.intValue());
+			TagUtil.datagrid(response, dataGrid);
+		} else if (moedlBrand == null || "".equals(moedlBrand)&& brandCode != null && !"".equals(brandCode)) {
+			String count1 = "select count(distinct(CARBRAND)) from vhl where CARBRAND like '%"
+					+ brandCode + "%'";
+			Long count2 = lableService.getCountForJdbc(count1);
+			HqlQuery hq = new HqlQuery(LableEntity.class, sql3, dataGrid);
+			PageList rdList = lableService.getPageListBySql(hq, true);
+			List<LableEntity> objList1 = rdList.getResultList();
+			dataGrid.setResults(objList1);
+			dataGrid.setTotal(count2.intValue());
+			TagUtil.datagrid(response, dataGrid);
+		} else if (moedlBrand != null && !"".equals(moedlBrand)&& brandCode != null && !"".equals(brandCode)) {
+			String count1 = "select count(distinct(CARBRAND)) from vhl where CARBRAND like '%"
+					+ moedlBrand + "%' and brandcode like '%" + brandCode + "%'";
+			Long count2 = lableService.getCountForJdbc(count1);
+			HqlQuery hq = new HqlQuery(LableEntity.class, sql4, dataGrid);
+			PageList rdList = lableService.getPageListBySql(hq, true);
+			List<LableEntity> objList1 = rdList.getResultList();
+			dataGrid.setResults(objList1);
+			dataGrid.setTotal(count2.intValue());
+			TagUtil.datagrid(response, dataGrid);
+		}
+	}
+	@RequestMapping(params = "lableList1")
+	public ModelAndView lableList1(HttpServletRequest request) {
+		return new ModelAndView("system/repair/lable/lableList1");
+	}
+	@RequestMapping(params = "lableList2")
+	public ModelAndView lableList2(HttpServletRequest request) {
+		return new ModelAndView("system/repair/lable/lableList2");
+	}
+
+	/**
+	 * 删除厂牌信息维护
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "del")
+	@ResponseBody
+	public AjaxJson del(LableEntity lable, HttpServletRequest request) {
+		String message = null;
+		AjaxJson j = new AjaxJson();
+//		lable = systemService.getEntity(LableEntity.class, lable.getId());
+//		message = "厂牌信息维护删除成功";
+//		lableService.delete(lable);
+//		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+//		
+//		j.setMsg(message);
+		return j;
+	}
+
+
+	/**
+	 * 添加厂牌信息维护
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(params = "save")
+	@ResponseBody
+	public AjaxJson save(LableEntity lable, HttpServletRequest request) {
+		String message = null;
+		AjaxJson j = new AjaxJson();
+//		HttpSession session = request.getSession();
+//		TSUser user=(TSUser) session.getAttribute(ResourceUtil.LOCAL_CLINET_USER);
+//		if (StringUtil.isNotEmpty(lable.getId())) {
+//			message = "厂牌信息维护更新成功";
+//			LableEntity t = lableService.get(LableEntity.class, lable.getId());
+//			try {
+//				
+//				t.setUpdTm(new Date());
+//				t.setUpdCde(user.getUserName());
+//				MyBeanUtils.copyBeanNotNull2Bean(lable, t);
+//				lableService.saveOrUpdate(t);
+//				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				message = "厂牌信息维护更新失败";
+//			}
+//		} else {
+//			message = "厂牌信息维护添加成功";
+//			lable.setCrtTm(new Date());
+//			lable.setCrtCde(user.getUserName());
+//			lableService.save(lable);
+//			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+//		}
+//		j.setMsg(message);
+		return j;
+	}
+
+	/**
+	 * 厂牌信息维护列表页面跳转
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "addorupdate")
+	public ModelAndView addorupdate(LableEntity lable, HttpServletRequest req) {
+//		if (StringUtil.isNotEmpty(lable.getId())) {
+//			lable = lableService.getEntity(LableEntity.class, lable.getId());
+//			req.setAttribute("lablePage", lable);
+//		}
+		return new ModelAndView("system/repair/lable/lable");
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseBody
+	public List<LableEntity> list() {
+		List<LableEntity> listLables=lableService.getList(LableEntity.class);
+		return listLables;
+	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> get(@PathVariable("id") String id) {
+		LableEntity task = lableService.get(LableEntity.class, id);
+		if (task == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity(task, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody LableEntity lable, UriComponentsBuilder uriBuilder) {
+//		Set<ConstraintViolation<LableEntity>> failures = validator.validate(lable);
+//		if (!failures.isEmpty()) {
+//			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
+//		}
+//
+//		//保存
+//		lableService.save(lable);
+//
+//		//按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
+//		String id = lable.getId();
+//		URI uri = uriBuilder.path("/rest/lableController/" + id).build().toUri();
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setLocation(uri);
+//
+//		return new ResponseEntity(headers, HttpStatus.CREATED);
+		return null ;
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> update(@RequestBody LableEntity lable) {
+		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
+		Set<ConstraintViolation<LableEntity>> failures = validator.validate(lable);
+		if (!failures.isEmpty()) {
+			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
+		}
+
+		//保存
+		lableService.saveOrUpdate(lable);
+
+		//按Restful约定，返回204状态码, 无内容. 也可以返回200状态码.
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable("id") String id) {
+		lableService.deleteEntityById(LableEntity.class, id);
+	}
+}

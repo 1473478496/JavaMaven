@@ -1,0 +1,4 @@
+E:
+CD E:\SVN\亚太送修\01-开发库\04项目开发阶段\源代码\trunc\repair
+"F:\Program Files\jdk1.7.0_80\bin\jar.exe" -cvf  repair.jar @repair.txt
+pause

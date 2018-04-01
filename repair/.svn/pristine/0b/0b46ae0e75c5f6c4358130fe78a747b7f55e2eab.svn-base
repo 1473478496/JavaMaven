@@ -1,0 +1,253 @@
+package cn.sunline.ws.foreignInterface.service.impl;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.sunline.repair.entity.BrandEntity;
+import cn.sunline.repair.entity.DealerInfoEntity;
+import cn.sunline.ws.foreignInterface.constants.RepairConstants;
+import cn.sunline.ws.foreignInterface.dao.IBrandEntityDao;
+import cn.sunline.ws.foreignInterface.dao.IDealerInfoDao;
+import cn.sunline.ws.foreignInterface.dao.IRepairMainDao;
+import cn.sunline.ws.foreignInterface.entity.RepairMainInfo;
+import cn.sunline.ws.foreignInterface.service.IRepairRulesService;
+@Service
+public class RepairRulesServiceImpl implements IRepairRulesService {
+	@Autowired
+	private IRepairMainDao repairMainDao;
+
+	@Autowired
+	private IDealerInfoDao dealerInfoDao;
+
+	@Autowired
+	private IBrandEntityDao brandDao;
+
+	@Override
+	public String repairRuel(RepairMainInfo rpairMainfo) {
+
+		//String repairNo = rpairMainfo.getRepairNo();// /车商代码
+		String repairNo = rpairMainfo.getPolicyRepairNo();//承包时车商代码
+		String isLocal = rpairMainfo.getIsLocalDanger();//是否本地出险 1 是 0 否
+		List<DealerInfoEntity> dealerInfoList = null;
+		String nextHql = "" ;
+		String flag = "" ;
+		String vehicleCode = "";
+		Object[] parameter = new Object[2];
+		try {//
+			//如果承包时车商代码为空并且不是本地出险
+			if ((repairNo == null || "".equals(repairNo)) || "0".equals(isLocal)) {
+				rpairMainfo.setRepairNo(null);
+				// 根据 车型匹配
+				vehicleCode = rpairMainfo.getVehlcleCode();// 车辆品牌
+				String aera = rpairMainfo.getCountyCode(); // /出险地点（区县代码）
+				// /BrandEntity 车商与品牌车型对应关系
+				String hql = "SELECT d FROM BrandEntity b, DealerInfoEntity d WHERE b.dealerCode = d.dealerCode and  b.brandCode = ? ";
+
+				String hqlAera = new String(hql);
+				hqlAera += " and d.area = ? ";
+				parameter[0] = vehicleCode;
+				parameter[1] = aera;
+				dealerInfoList = dealerInfoDao.getDealerInfoList(hqlAera.toString(), parameter);
+				nextHql = hqlAera ;
+				flag = "area";
+				String hqlCity ="";
+				String hqlSpareArea1 ="";
+				String hqlSpareArea2 ="";
+				String hqlProvince = "";
+				setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_3) ;
+				///附近区域 1
+				if (dealerInfoList.size() == 0) {
+					String spareArea1 = rpairMainfo.getCountyCode();// 出险地点（区县代码）
+					parameter[1] = spareArea1;
+					hqlSpareArea1 = new String(hql);
+					hqlSpareArea1 += " and d.spareArea1 = ? ";
+					dealerInfoList = dealerInfoDao.getDealerInfoList(hqlSpareArea1.toString(), parameter);
+					nextHql = hqlSpareArea1;
+					flag = "spareArea1";
+					setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_8) ;
+				}
+				///附近区域 2
+				if (dealerInfoList.size() == 0) {
+					String spareArea2 = rpairMainfo.getCountyCode();//出险地点（区县代码）
+					parameter[1] = spareArea2;
+					hqlSpareArea1 = new String(hql);
+					hqlSpareArea1 += " and d.spareArea2 = ? ";
+					dealerInfoList = dealerInfoDao.getDealerInfoList(hqlSpareArea1.toString(), parameter);
+					nextHql = hqlSpareArea1;
+					flag = "spareArea2";
+					setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_9) ;
+				}
+				if (dealerInfoList.size() == 0) {
+					String city = rpairMainfo.getLandCode();// 出险地点（地市代码
+					parameter[1] = city;
+					hqlCity = new String(hql);
+					hqlCity += " and d.city = ? ";
+					dealerInfoList = dealerInfoDao.getDealerInfoList(hqlCity.toString(), parameter);
+					nextHql = hqlCity;
+					flag = "city";
+					setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_4) ;
+				}
+//				if (dealerInfoList.size() == 0) {
+//					String province = rpairMainfo.getProvinceCode();// 出险地点（sheng代码
+//					parameter[1] = province;
+//					hqlProvince = new String(hql);
+//					hqlProvince += " and d.province = ? ";
+//					dealerInfoList = dealerInfoDao.getDealerInfoList(hqlProvince.toString(), parameter);
+//					nextHql = hqlProvince;
+//					flag = "province";
+//					setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_5) ;
+//				}
+				if (dealerInfoList.size() == 0) { // 根据车型未匹配到 则为 其他车 ,如果已經是其他车则不在走
+					if("OTHER".equals(rpairMainfo.getVehlcleCode())){
+						return repairNo ;
+					}
+					//对象复制
+					RepairMainInfo newMainInfo = new RepairMainInfo();
+					BeanUtils.copyProperties(rpairMainfo, newMainInfo);
+					newMainInfo.setVehlcleName("其他");
+					newMainInfo.setVehlcleCode("OTHER");
+					newMainInfo.setModelCode("OTHER");
+					newMainInfo.setModelName("其他");
+					repairNo = repairRuel(newMainInfo);//把品牌改為其他繼續送修
+					setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_7) ;
+				} else if (dealerInfoList.size() == 1) {
+					repairNo = dealerInfoList.get(0).getDealerCode();
+
+				} else if (dealerInfoList.size() > 1) {
+					// 根据权重权重
+					repairNo = repairRulesWeighting(rpairMainfo, null , nextHql.replace("SELECT d", "SELECT b"),parameter , flag);	
+					setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_6) ;
+					dealerInfoList = null ; //释放对象
+				}				
+			} else {
+				// 如有车商代码则判断车商代码的正确性
+				String hql = "SELECT d FROM DealerInfoEntity d WHERE d.dealerCode = ? ";
+				dealerInfoList = dealerInfoDao.getDealerInfoList(hql.toString(), new Object[]{repairNo});
+				if(dealerInfoList != null && dealerInfoList.size() > 0 && dealerInfoList.get(0).getId() != null ){
+					///有对应的车商信息
+					setRepairRule(rpairMainfo , RepairConstants.REPAIRRULE_1) ;
+				}else{//根据送修策略确定车商编码
+					//rpairMainfo.setRepairNo(null);
+					String policyrepairNo=repairNo;
+					rpairMainfo.setPolicyRepairNo(null);
+					repairNo = repairRuel(rpairMainfo);
+					rpairMainfo.setPolicyRepairNo(policyrepairNo);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return repairNo;
+	
+	}
+
+	@Override
+	public String repairRulesWeighting(RepairMainInfo rpairMainInfo, List<String> repairNos,String repairHql ,Object[] para , String flag) {
+		String reairNo = "";
+		String weight = ""; // 权重
+		String ratio = ""; // 就近系数
+		List<BrandEntity> brandEntityList = null;
+		try {
+			String hql = repairHql + " order by (b.weight + b.ratio) desc";
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+		    Date date = new Date();
+		    String currDate = sdf.format(date);
+			//笨鱼车商已修数量
+			String sqlDealerInfoSum = "select info.dealer_no, count(1) from rp_dealer_info info where info.dealer_no in " +
+					"(select brand.dealer_code  from RP_BRAND_MAINTENANCE brand, rp_dealer_maintenance dealer" +
+					" where brand.dealer_Code = dealer.Dealer_Code and brand.brand_Code = ? and dealer." +  flag + " = ? )" +
+					" and to_char(info.crt_tm,'YYYY-MM') = '" + currDate+ "' group by info.dealer_no";
+			
+			List dealerInfoSumList = repairMainDao.getListbySql(sqlDealerInfoSum , para);
+			Map<String,String> dealerInfoSumMap = new HashMap<String,String>();
+			for(int i = 0 ; i < dealerInfoSumList.size() ; i ++ ){
+				for (Iterator iterator = dealerInfoSumList.iterator(); iterator.hasNext();) {
+					Object[] tm = (Object[]) iterator.next();
+					dealerInfoSumMap.put(tm[0].toString(), tm[1].toString());
+				}
+			}
+			//笨鱼车商已送修数量
+			String sqlMainSum = "select  main.repair_no, count(1)  from  rp_main_info main   where main.repair_no in " +
+					"(select  brand.dealer_code from RP_BRAND_MAINTENANCE brand, rp_dealer_maintenance dealer " +
+					"where  brand.dealer_Code = dealer.Dealer_Code and brand.brand_Code = ? and dealer." +  flag + " = ? )" +
+					" and to_char(main.crt_tm,'YYYY-MM') = '" + currDate+ "' group by  main.repair_no";
+			
+			List mainSumList = repairMainDao.getListbySql(sqlMainSum , para);
+			
+			Map<String,String> mainSumMap = new HashMap<String,String>();
+			for(int i = 0 ; i < mainSumList.size() ; i ++ ){
+				for (Iterator iterator = dealerInfoSumList.iterator(); iterator.hasNext();) {
+					Object[] tm = (Object[]) iterator.next();
+					mainSumMap.put(tm[0].toString(), tm[1].toString());
+				}
+			}
+			
+			brandEntityList = brandDao.getBrandEntityList(hql, para);
+			double wr = 0; // 4s店权重
+			double total = 0; // 各4s店权重之和
+			for (int i = 0; i < brandEntityList.size(); i++) {
+				weight = brandEntityList.get(i).getWeight();
+				ratio = brandEntityList.get(i).getRatio();
+				wr = new BigDecimal(weight).multiply(new BigDecimal(ratio).add(new BigDecimal("1"))).doubleValue();
+				total = new BigDecimal(total).add(new BigDecimal(wr)).doubleValue();
+			}
+
+			for (int i = 0; i < brandEntityList.size(); i++) {
+				weight = brandEntityList.get(i).getWeight();
+				ratio = brandEntityList.get(i).getRatio();
+				wr = new BigDecimal(weight).multiply(new BigDecimal(ratio).add(new BigDecimal("1"))).doubleValue();
+
+				double choiceChance = (new BigDecimal(wr).divide(new BigDecimal(total),2 , RoundingMode.HALF_UP)).doubleValue();// 4S店派修选中概率
+				
+				String dealerCode= brandEntityList.get(i).getDealerCode();
+				
+				int  repairedcount = 0 ;
+				if(dealerInfoSumMap.get(dealerCode) != null){
+					repairedcount = Integer.parseInt(dealerInfoSumMap.get(dealerCode));
+				}
+				int  sendRepaircount = 0 ;
+				if(mainSumMap.get(dealerCode) != null ){
+					sendRepaircount = Integer.parseInt(mainSumMap.get(dealerCode));
+				}
+				
+//				int  repairedcount= dealearInfoList.size(); // 本4S店本月已经修理数量
+//				int  sendRepaircount = rInfoList.size(); // 本4S店本月已经送修数量
+				int  totalSendrepaircount = sendRepaircount +1; //本4S店本月已经送修数量+本次送修车辆
+
+				double expectChance = new BigDecimal(repairedcount).divide(new BigDecimal(totalSendrepaircount),2 , RoundingMode.HALF_UP).doubleValue(); // 本厂预计送修概率
+
+				if (expectChance < choiceChance) {
+					reairNo = dealerCode;
+					break;
+				}
+				if (i == (brandEntityList.size() - 1)) { // 所有的4S店的派修选中概率都已经超出，则直接分配给权重最高的4S店。
+					reairNo = brandEntityList.get(0).getDealerCode();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return reairNo;
+	}
+	
+	public void setRepairRule(RepairMainInfo rpairMainInfo , String repairRule){
+		String rule = rpairMainInfo.getRepairRule() ; 
+		if(rule != null && !"".equals(rule)){
+			rpairMainInfo.setRepairRule(rule + repairRule);
+		}else{
+			rpairMainInfo.setRepairRule(repairRule);
+		}
+	}
+}

@@ -1,0 +1,410 @@
+package cn.sunline.ws.foreignInterface.service.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.jws.WebService;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import cn.sunline.ws.foreignInterface.constants.RepairConstants;
+import cn.sunline.ws.foreignInterface.dao.IDealerInfoDao;
+import cn.sunline.ws.foreignInterface.dao.IRepairMainDao;
+import cn.sunline.ws.foreignInterface.entity.DealearInfo;
+import cn.sunline.ws.foreignInterface.entity.Head;
+import cn.sunline.ws.foreignInterface.entity.RepairMainInfo;
+import cn.sunline.ws.foreignInterface.service.IDispatchSubmitService;
+import cn.sunline.ws.foreignInterface.service.IRepairRulesService;
+import cn.sunline.ws.foreignInterface.service.IRepairService;
+import cn.sunline.ws.foreignInterface.service.ISurveySubmitService;
+import cn.sunline.ws.foreignInterface.service.IVerifyLossSubmitService;
+import cn.sunline.ws.foreignInterface.service.IWsMessageService;
+import cn.sunline.ws.foreignInterface.utils.RepairUtils;
+
+/**
+ * 送修-- webservices接口实现 调度提交、查勘提交、核损通过信息告知
+ */
+@WebService(targetNamespace = "http://cn/sunline/repair/foreignInterface/IRepairService", name = "IRepairService")
+@Service("rpService")
+@Transactional
+public class RepairServiceImpl implements IRepairService {
+
+	private static final String String = null;
+
+	private Logger logger = Logger.getLogger(RepairServiceImpl.class);
+	
+	@Autowired
+	private IDispatchSubmitService dispatchSubmitService;
+	
+	@Autowired
+	private IVerifyLossSubmitService verifyLossSubmitService;
+	
+	@Autowired
+	private ISurveySubmitService surveySubmitService ;
+	
+	@Autowired
+	private IWsMessageService messageService ;
+	
+	@Autowired
+	private IRepairRulesService repairRulesService;
+
+	@Autowired
+	private IRepairMainDao repairMainDao;
+
+	@Autowired
+	private IDealerInfoDao dealerInfoDao;
+
+	/**
+	 * 调度提交实现 param:requsetXml return: responeXml
+	 */
+	public String dispatchSubmit(String requsetXml) throws Exception {
+		RepairValidateService rvservice = RepairValidateService.getInstance();
+		RepairUtils repairUtils = new RepairUtils();
+		String responseXml = null;
+		String requestType = null;
+		String frmNo = "";
+		String reportNo = "";
+		Head head = null;
+		RepairMainInfo repairMainInfo = null;
+		try {
+			logger.info("收到调度提交请求报文:\n" + requsetXml);
+			// 判断报文内容是否为空
+			if (RepairUtils.isEmpty(requsetXml)) {
+				throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@报文内容为空！");
+			}
+
+			head = repairUtils.getHeadInfo(requsetXml, null, "/PACKET/HEAD");
+			repairMainInfo = repairUtils.getRpairMainInfo(requsetXml, null,"/PACKET/BODY/BASE_INFO");
+			repairMainInfo = repairUtils.getRpairMainInfo(requsetXml, repairMainInfo,"/PACKET/BODY/VEHICLE_INFO");
+			repairMainInfo = repairUtils.getRpairMainInfo(requsetXml, repairMainInfo,"/PACKET/BODY/CLAIM_INFO");
+
+			frmNo = repairMainInfo.getFrmNo();
+			reportNo = repairMainInfo.getReportNo();
+
+			// 校验其他内容
+			String vlidateInfo = rvservice.isVerified(repairMainInfo);
+			if (!"".equals(vlidateInfo)) {
+				throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@" + vlidateInfo + "车架号为" + repairMainInfo.getFrmNo());
+			}
+			// / 不送修策略 拖拉机、摩托车、营运性质（使用性质）
+			String rules = rvservice.validateRepairRule(repairMainInfo);
+			
+			if("".equals(rules)){//符合送修規則才送修
+				// 策略获取车商代码
+				repairMainInfo.setPolicyRepairNo(repairMainInfo.getRepairNo());///承保时的车商代码
+				if(repairMainInfo.getVehicleType() == null ){
+					repairMainInfo.setVehicleType("00");///调度提交时默认标的车					
+				}
+				String repairNo = repairRulesService.repairRuel(repairMainInfo);//获取推荐的车商代码
+				repairMainInfo.setRepairNo(repairNo); 
+				// 保存数据
+				String hql = " From RepairMainInfo  where  frmNo= ? and reportNo=?";
+				RepairMainInfo rPCInfo = repairMainDao.getRCInfo(hql, new Object[] {frmNo, reportNo });
+				if (rPCInfo == null || rPCInfo.getId() == null) {
+					if(null!=repairMainInfo.getRepairNo()&&!"".equals(repairMainInfo.getRepairNo())){
+						repairMainInfo.setRepairSerialNo(reportNo + frmNo);
+						repairMainInfo.setRepairState(RepairConstants.REPAIR_STATUS_1);
+						repairMainInfo.setCrtTm(new Date());
+						repairMainInfo.setUpdTm(new Date());
+						repairMainDao.addRCinfo(repairMainInfo);
+					}else{
+						repairMainInfo.setRepairSerialNo(reportNo + frmNo);
+						repairMainInfo.setRepairState(RepairConstants.REPAIR_STATUS_3);
+						repairMainInfo.setCrtTm(new Date());
+						repairMainInfo.setUpdTm(new Date());
+						repairMainDao.addRCinfo(repairMainInfo);
+					}
+				} else {
+					if(null!=repairMainInfo.getRepairNo()&&!"".equals(repairMainInfo.getRepairNo())){
+						String id = rPCInfo.getId();
+						repairMainInfo.setId(id);
+						repairMainInfo.setRepairSerialNo(reportNo + frmNo);
+						repairMainInfo.setRepairState(RepairConstants.REPAIR_STATUS_1);
+						repairMainInfo.setUpdTm(new Date());
+						repairMainDao.updateRCInfo(repairMainInfo);
+					}else{
+						repairMainInfo.setRepairSerialNo(reportNo + frmNo);
+						repairMainInfo.setRepairState(RepairConstants.REPAIR_STATUS_3);
+						repairMainInfo.setCrtTm(new Date());
+						repairMainInfo.setUpdTm(new Date());
+						repairMainDao.updateRCInfo(repairMainInfo);
+					}
+				}
+				// 保存数据到 短信主表
+				messageService.saveMsgMianInfo(repairMainInfo);
+			}else{//不符合送修規則的只保存數據 , 無車商代碼、無送修碼
+				// 保存数据1
+				String hql = " From RepairMainInfo  where  frmNo= ? and reportNo=?";
+				RepairMainInfo rPCInfo = repairMainDao.getRCInfo(hql, new Object[] {frmNo, reportNo });
+				if (rPCInfo == null || rPCInfo.getId() == null ) {
+					repairMainInfo.setRepairSerialNo(reportNo + frmNo);
+					repairMainInfo.setRepairState(RepairConstants.REPAIR_STATUS_2);///不送修状态；
+					repairRulesService.setRepairRule(repairMainInfo , RepairConstants.REPAIRRULE_2) ;
+					repairMainInfo.setCrtTm(new Date());
+					repairMainInfo.setUpdTm(new Date());
+					repairMainDao.addRCinfo(repairMainInfo);
+				} else {
+					String id = rPCInfo.getId();
+					repairMainInfo.setId(id);
+					repairMainInfo.setRepairSerialNo(reportNo + frmNo);
+					repairMainInfo.setRepairState(RepairConstants.REPAIR_STATUS_2);///不送修状态；
+					repairRulesService.setRepairRule(repairMainInfo , RepairConstants.REPAIRRULE_2) ;
+					repairMainInfo.setUpdTm(new Date());
+					repairMainDao.updateRCInfo(repairMainInfo);
+				}
+			}
+			// 获得返回报文
+			responseXml = rvservice.resopneDispatchXml(repairMainInfo);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseXml = repairUtils.errorXML(RepairUtils.getExceptionMessage(e),requestType);
+		} finally {
+			try {
+				// 保存交互报文
+				if (responseXml != null & requsetXml != null) {
+					dispatchSubmitService.savePacket(frmNo, reportNo, responseXml, requsetXml,"调度提交_S1");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return responseXml;
+	}
+
+	/**
+	 * 查勘提交实现 param:requsetXml return: responeXml
+	 */
+	public String surveySubmit(String requsetXml) throws Exception {
+		RepairValidateService rvservice = RepairValidateService.getInstance();
+		RepairUtils repairUtils = new RepairUtils();
+		Head head = null;
+		List<RepairMainInfo> mainList = new ArrayList<RepairMainInfo>();
+		String responseXml = "";
+		String requestType = "";
+		String hql = "";
+		try {
+			logger.info("收到查勘提交请求报文:\n" + requsetXml);
+			// 判断报文内容是否为空
+			if (RepairUtils.isEmpty(requsetXml)) {
+				throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@报文内容为空！");
+			}
+			head = repairUtils.getHeadInfo(requsetXml, null, "/PACKET/HEAD");
+
+			mainList = repairUtils.getMainfoList(requsetXml); // 将xml 转换为 集合对象
+
+			String surveyorName = null;
+			String surveyorCode = null;
+			String surveyorTelphone = null;
+			for (RepairMainInfo rcInfo : mainList) {
+				// 必传信息检验
+				String vehicleType = rcInfo.getVehicleType();
+				String repairSerialNo = rcInfo.getRepairSerialNo();
+				String assessCode = rcInfo.getAssessCode();
+				String assessName = rcInfo.getAssessName();
+				String assessTelphone = rcInfo.getAssessTelphone();
+
+				if (vehicleType == null || "".equals(vehicleType)) {
+					throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@车辆所属类型不能为空！");
+				}
+
+				if ("00".equals(vehicleType)) { // 标的车
+					if (repairSerialNo == null || "".equals(repairSerialNo)) {
+						throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@" + "车辆所属类型为标的车时,派修码不能为空！");
+					}
+					if (assessCode == null || assessName == null || assessTelphone == null) {
+						throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@" + "车辆所属类型为标的车时,定损员信息不能为空！");
+					}
+//					else if (!RepairUtils.ismobile(assessTelphone)) {
+//						return "定损员手机号码错误,请重新填写";
+//					}
+				} else if ("".equals(vehicleType)) {
+					String vlidateInfo = rvservice.isVerified(rcInfo);
+					if (!"".equals(vlidateInfo)) {
+						throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@" + vlidateInfo + "车架号为" + rcInfo.getFrmNo());
+					}
+				}
+
+				// 保存数据
+				if ("00".equals(vehicleType)) {// 标的车 此時只是保存定損員信息
+//					String frmNo = rcInfo.getFrmNo();
+//					String reportNo = rcInfo.getReportNo();
+//					hql = " From RepairMainInfo  where  frmNo= ? and reportNo=?";
+					hql = "From RepairMainInfo  where repairSerialNo = ?";
+					List<RepairMainInfo> list = repairMainDao.getRClist(hql, new Object[] { repairSerialNo });
+					if (list.size() > 0) {
+						for(RepairMainInfo mianInfo : list) {
+							mianInfo.setAssessCode(rcInfo.getAssessCode());
+							mianInfo.setAssessName(rcInfo.getAssessName());
+							mianInfo.setAssessTelphone(rcInfo.getAssessTelphone());
+							mianInfo.setRepairSerialNo(rcInfo.getRepairSerialNo());
+							mianInfo.setUpdTm(new Date());
+							repairMainDao.addRCinfo(mianInfo);
+							messageService.updateMsmInfo(mianInfo);
+						}
+					}
+				} else {// 三者车
+					// / 不送修策略 拖拉机、摩托车、营运性质（使用性质）
+					String rules = rvservice.validateRepairRule(rcInfo);
+					if ("".equals(rules)) {// 符合送修規則才送修
+						//根据报案号和标的车的标志查出该案件的定损员和查勘员
+						if(surveyorName == null || "".equals(surveyorName)){
+							hql = "From RepairMainInfo  where reportNo = ? and vehicleType ='00'";
+							List<RepairMainInfo> list = repairMainDao.getRClist(hql, new Object[] { rcInfo.getReportNo() });
+							if (list.size() > 0) {
+								RepairMainInfo tmp = list.get(0);
+								assessCode = tmp.getAssessCode();
+								assessName = tmp.getAssessName();
+								assessTelphone = tmp.getAssessTelphone();
+								
+								surveyorName = tmp.getSurveyorName();
+								surveyorCode = tmp.getSurveyorCode();
+								surveyorTelphone = tmp.getSurveyorTelphone();
+								
+							}
+						}
+						
+						rcInfo.setAssessCode(assessCode);
+						rcInfo.setAssessName(assessName);
+						rcInfo.setAssessTelphone(assessTelphone);
+						rcInfo.setSurveyorCode(surveyorCode);
+						rcInfo.setSurveyorName(surveyorName);
+						rcInfo.setSurveyorTelphone(surveyorTelphone);
+						
+						// 策略获取车商代码
+						String repairNo = repairRulesService.repairRuel(rcInfo);
+						rcInfo.setRepairNo(repairNo);
+						String frmNo = rcInfo.getFrmNo();
+						String reportNo = rcInfo.getReportNo();
+						hql = " From RepairMainInfo  where  frmNo= ? and reportNo=?";
+						RepairMainInfo rPCInfo = repairMainDao.getRCInfo(hql, new Object[] { frmNo, reportNo });
+						if (rPCInfo == null || rPCInfo.getId() == null) {
+							rcInfo.setRepairSerialNo(reportNo + frmNo);
+							rcInfo.setRepairState(RepairConstants.REPAIR_STATUS_1);
+							rcInfo.setCrtTm(new Date());
+							rcInfo.setUpdTm(new Date());
+							repairMainDao.addRCinfo(rcInfo);
+						} else {
+							String id = rPCInfo.getId();
+							rcInfo.setId(id);
+							rcInfo.setRepairSerialNo(reportNo + frmNo);
+							rcInfo.setRepairState(RepairConstants.REPAIR_STATUS_1);
+							rcInfo.setUpdTm(new Date());
+							repairMainDao.updateRCInfo(rcInfo);
+						}
+						messageService.saveMsgMianInfo(rcInfo);
+					}else{//不送修知保存数据
+						String frmNo = rcInfo.getFrmNo();
+						String reportNo = rcInfo.getReportNo();
+						hql = " From RepairMainInfo  where  frmNo= ? and reportNo=?";
+						RepairMainInfo rPCInfo = repairMainDao.getRCInfo(hql, new Object[] { frmNo, reportNo });
+						if (rPCInfo == null || rPCInfo.getId() == null) {
+							rcInfo.setRepairSerialNo(reportNo + frmNo);
+							rcInfo.setRepairState(RepairConstants.REPAIR_STATUS_2);
+							repairRulesService.setRepairRule(rcInfo , RepairConstants.REPAIRRULE_2) ;
+							rcInfo.setCrtTm(new Date());
+							rcInfo.setUpdTm(new Date());
+							repairMainDao.addRCinfo(rcInfo);
+						} else {
+							String id = rPCInfo.getId();
+							rcInfo.setId(id);
+							rcInfo.setRepairSerialNo(reportNo + frmNo);
+							rcInfo.setRepairState(RepairConstants.REPAIR_STATUS_2);
+							repairRulesService.setRepairRule(rcInfo , RepairConstants.REPAIRRULE_2) ;
+							rcInfo.setUpdTm(new Date());
+							repairMainDao.updateRCInfo(rcInfo);
+						}
+					}
+				}
+					
+			}
+
+			// 返回报文
+			responseXml = rvservice.resopneSurveyXml(mainList);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseXml = repairUtils.errorXML(RepairUtils.getExceptionMessage(e), requestType);
+		} finally {
+			// 保存交互报文
+			if (responseXml != null & requsetXml != null) {
+				surveySubmitService.savePacket(mainList, responseXml, requsetXml,"查勘提交_S2");
+			}
+		}
+		return responseXml;
+
+	}
+
+	/**
+	 * 核损通过信息告知实现 param:requsetXml return: responeXml
+	 */
+	public String verifyLossSubmit(String requsetXml) throws Exception {
+		RepairUtils repairUtils = new RepairUtils();
+		List<DealearInfo> DeInfoList = new ArrayList<DealearInfo>();
+		String responseXml = "";
+		String requestType = "";
+		try {
+			logger.info("收到核损通过告知请求报文:\n" + requsetXml);
+			// 判断报文内容是否为空
+			if (RepairUtils.isEmpty(requsetXml)) {
+				throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@报文内容为空！");
+			}
+			
+			Head head = repairUtils.getHeadInfo(requsetXml, null, "/PACKET/HEAD"); // 获取报文头部对象
+
+			DeInfoList = repairUtils.getDeInfoList(requsetXml); // 将xml 转换为 集合对象
+
+			for (DealearInfo deInfo : DeInfoList) {
+				// 必填信息校验
+				String vlidateInfo = verifyLossSubmitService.validate(deInfo);
+				if (!"".equals(vlidateInfo)) {
+					throw new Exception(RepairConstants.CHECK_FAILED_CODE + "@" + vlidateInfo + "车架号为" + deInfo.getFrmNo());
+				}
+				// 保存数据
+				String frmNo = deInfo.getFrmNo();
+				String reportNo = deInfo.getReportNo();
+				String hql = " From   DealearInfo where  frmNo= ? and reportNo=?";
+				DealearInfo dealearInfo = dealerInfoDao.getDealerInfo(hql, new Object[] { frmNo, reportNo });
+				String repairHql = "From RepairMainInfo where frmNo= ? and reportNo=? ";
+				if (dealearInfo == null || dealearInfo.getId() == null ) {
+					deInfo.setCrtTm(new Date());	
+					deInfo.setUpdTm(new Date());
+				    dealerInfoDao.addDeInfo(deInfo);
+				    RepairMainInfo rmian = repairMainDao.getRCInfo(repairHql, new Object[] { frmNo, reportNo });
+				    if(rmian.getId()!=null){
+				    	rmian.setDealerNo(deInfo.getDealerNo());
+				    	rmian.setMaintenanceStatus(RepairConstants.Maintenanceing);
+				    	rmian.setUpdTm(new Date());
+				    	repairMainDao.updateRCInfo(rmian);
+				    }
+				} else {
+					// 更新该该条数据
+					String id = dealearInfo.getId();
+					deInfo.setId(id);
+					deInfo.setUpdTm(new Date());
+					dealerInfoDao.updateDelerInfo(deInfo);
+					RepairMainInfo rmian = repairMainDao.getRCInfo(repairHql, new Object[] { frmNo, reportNo });
+					if(rmian.getId()!=null){
+				    	rmian.setDealerNo(deInfo.getDealerNo());
+				    	rmian.setUpdTm(new Date());
+				    	repairMainDao.updateRCInfo(rmian);
+				    }
+				}			
+			}
+			responseXml = repairUtils.getSuccessMsg();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseXml = repairUtils.errorXML(RepairUtils.getExceptionMessage(e),requestType);
+		} finally {
+			// 保存交互报文
+			if (responseXml != null & requsetXml != null) {
+				verifyLossSubmitService.savePacket(DeInfoList, responseXml, requsetXml,"核损通过告知_S3");
+			}
+		}
+		return responseXml;
+	}
+}

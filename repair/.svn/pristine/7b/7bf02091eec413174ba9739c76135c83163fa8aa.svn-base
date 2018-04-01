@@ -1,0 +1,110 @@
+package cn.sunline.repair.entity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.SequenceGenerator;
+
+/**   
+ * @Title: Entity
+ * @Description: 厂牌信息维护
+ * @author zhangdaihao
+ * @date 2016-10-13 18:05:02
+ * @version V1.0   
+ *
+ */
+@Entity
+@Table(name = "VHL")
+@DynamicUpdate(true)
+@DynamicInsert(true)
+@SuppressWarnings("serial")
+public class LableEntity implements java.io.Serializable {
+	/**id*/
+	/**车型代码*/
+	private java.lang.String modelCode;
+	/**车型名称*/
+	private java.lang.String modelName;
+	/**车型品牌*/
+	private java.lang.String moedlBrand;
+	private String brandCode; //品牌编码
+	/**注释*/
+	private java.lang.String notes;
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  id
+	 */
+
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  车型代码
+	 */
+	@Id
+	@GeneratedValue(generator = "paymentableGenerator")
+	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+	@Column(name ="MODELCODE",nullable=false,length=50)
+	public java.lang.String getModelCode() {
+		return modelCode;
+	}
+
+	public void setModelCode(java.lang.String modelCode) {
+		this.modelCode = modelCode;
+	}
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  车型名称
+	 */
+	@Column(name ="MODELCNAME",nullable=true,length=50)
+	public java.lang.String getModelName() {
+		return modelName;
+	}
+
+	public void setModelName(java.lang.String modelName) {
+		this.modelName = modelName;
+	}
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  车型品牌
+	 */
+	@Column(name ="CARBRAND",nullable=true,length=50)
+	public java.lang.String getMoedlBrand() {
+		return moedlBrand;
+	}
+
+	public void setMoedlBrand(java.lang.String moedlBrand) {
+		this.moedlBrand = moedlBrand;
+	}
+	
+	@Column(name ="BRANDCODE")
+	public java.lang.String getBrandCode() {
+		return brandCode;
+	}
+
+	public void setBrandCode(java.lang.String brandCode) {
+		this.brandCode = brandCode;
+	}
+	
+	
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  注释
+	 */
+	@Column(name ="REMARK",nullable=true,length=50)
+	public java.lang.String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(java.lang.String notes) {
+		this.notes = notes;
+	}
+}

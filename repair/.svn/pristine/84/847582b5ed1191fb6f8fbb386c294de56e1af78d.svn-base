@@ -1,0 +1,80 @@
+<%@ page language="java" import="java.util.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@include file="/context/mytags.jsp"%>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>出险车维修管理</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <t:base type="jquery,easyui,tools,DatePicker"></t:base>
+  <link href="<%=basePath %>/plug-in/uploadify/css/uploadify.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="<%=basePath%>/plug-in/uploadify/jquery.uploadify-3.1.js"></script>
+  <style type="text/css">
+  	.checkbox_false{
+  		border:1px solid red !important;width:100px;height:100px;padding: 5px;margin: 5px;
+  	}
+  	.checkbox_true{
+  		border:1px solid #ccc !important;width:100px;height:100px;padding: 5px;margin: 5px;
+  	}
+  </style>
+  <script type="text/javascript">
+   $(function(){
+       $("#imgBoxs")
+       
+   });
+   
+   function delImgAgeData(elment){
+		elment.onclick=function(){
+			alert("---");
+			var id="";
+			var number=0;
+			var imgData=document.getElementsByTagName("img");
+			var ui =document.getElementById("imgId").style.border;
+			for(var i=0;i<imgData.length;i++){
+				var imgDataVal=imgData[i];
+				if(imgDataVal.style.border.length==13){
+					id=id+imgDataVal.src;
+				}
+			}
+			id.replace("/http://localhost:8080/repair/uploadController/export.do?id=/g","");
+			alert("id---|"+id);
+			var url="/uploadController/delImgAgeData.do?id="+id;
+			$.ajax({
+		  			async : false,
+		  			cache : false,
+		  			type : 'POST',
+		  			url : url,// 请求的action路径
+		  			error : function() {// 请求失败处理函数
+		  			},
+		  			success : function(data) {
+	  				var d = $.parseJSON(data);
+	  				if (d.success) {
+	  				var msg = d.msg;
+	  				tip(msg);
+					setTimeout("window.location.reload()","500");
+		  			}
+		  			}
+		  	});
+		} 
+	}
+   function doClickImg(index){
+	   var _ipt = $("#ipt_"+index).is(":checked"); 
+	   if(_ipt){
+		   $("#img_"+index).addClass("checkbox_true").removeClass("checkbox_false");
+		   $("#ipt_"+index).attr({"checked":false}); 
+	   }else{
+		   $("#img_"+index).addClass("checkbox_false").removeClass("checkbox_true");
+		   $("#ipt_"+index).attr({"checked":true});
+	   }
+   }
+    </script>
+ </head>
+ <body>
+ 	<button type="button" id="deleteImgBtn">删除</button>
+ 	<form>
+		<c:forEach var="imgObj" items="${objList }" varStatus="idx">
+			<img id="img_${idx.count }" name="imgBoxs" onclick="doClickImg('${idx.count}')"  src="${webRoot }/uploadController/export.do?id=${imgObj.id }" style="width:100px;height:100px;padding: 5px;margin: 5px;border: 1px solid #ccc;">
+			<input type="checkbox" id="ipt_${idx.count }" value="${imgObj.id }" style="display: none;">
+		</c:forEach>
+	</form>
+ </body>
+</html>
